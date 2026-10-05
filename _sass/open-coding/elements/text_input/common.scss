@@ -1,0 +1,43 @@
+// text inputs
+input, textarea {
+    color: var(--pref-text-color);
+
+    // border
+    border-radius: $border-size;
+    border: 1px solid color-mix(in srgb, var(--pref-text-color) 24%, transparent);
+
+    // shadow
+    filter: drop-shadow(0 10px 10px color-mix(in srgb, var(--pref-text-color) 12%, transparent));
+
+    // spacing
+    padding: 15px;
+
+    // focus colors
+    &:focus {
+        outline: none;
+        border-color: var(--pref-accent-color);
+    }
+
+    // override the default browser autofil settings
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: var(--pref-text-color);
+        transition: background-color 5000s ease-in-out 0s;
+        box-shadow: inset 0 0 20px 20px var(--pref-bg-color);
+    }
+
+    transition: all 0.3s ease;
+}
+
+select.ocs__input {
+    color: var(--pref-text-color);
+    background-color: var(--pref-bg-color);
+}
+
+select.ocs__input option {
+    color: var(--pref-text-color);
+    background-color: var(--pref-bg-color);
+}
