@@ -27,7 +27,49 @@ hide: true
 
 <br>
 
-<div class="ocs__grid ocs__grid--standard">
+<div class="ocs__grid ocs__grid--standard cols-4" id="impact">
+    <div class="ocs__grid-cell ocs__grid-cell--header">Our Impact</div>
+
+    <div class="ocs__grid-cell ocs__grid-cell--wide ocs__grid-cell--muted">
+        <div class="ocs__links">
+            <button class="ocs__btn small fill">Last 7 days</button>
+            <button class="ocs__btn small">Last 30 days</button>
+            <button class="ocs__btn small">Last year</button>
+        </div>
+    </div>
+    <div class="ocs__grid-cell ocs__grid-cell--wide ocs__grid-cell--muted">
+        <p><em>Real numbers coming once we have Shoreline's data.</em></p>
+    </div>
+
+    <div class="ocs__grid-cell ocs__grid-cell--accent">
+        <h2>—</h2>
+        <p>People helped</p>
+    </div>
+    <div class="ocs__grid-cell ocs__grid-cell--accent">
+        <h2>—</h2>
+        <p>Meals served</p>
+    </div>
+    <div class="ocs__grid-cell ocs__grid-cell--accent">
+        <h2>—</h2>
+        <p>Nights of shelter</p>
+    </div>
+    <div class="ocs__grid-cell ocs__grid-cell--accent">
+        <h2>—</h2>
+        <p>Volunteer hours</p>
+    </div>
+
+    <div class="ocs__grid-cell ocs__grid-cell--header">People helped over the past year</div>
+    <div class="ocs__grid-cell ocs__grid-cell--wide ocs__grid-cell--muted">
+        <p>📈 Graph coming soon</p>
+    </div>
+    <div class="ocs__grid-cell ocs__grid-cell--wide ocs__grid-cell--muted">
+        <p>Each month will show how many people got shelter, food, or support.</p>
+    </div>
+</div>
+
+<br>
+
+<div class="ocs__grid ocs__grid--standard cols-4">
     <div class="ocs__grid-cell ocs__grid-cell--header">How can we help you today?</div>
 
     <div class="ocs__grid-cell" id="need-help">
@@ -46,6 +88,12 @@ hide: true
         <strong>Donate</strong>
         <p>Give money or the items local shelters need right now.</p>
         <a class="ocs__btn medium alert-yellow" href="#donate">Give Today</a>
+    </div>
+
+    <div class="ocs__grid-cell">
+        <strong>Our Impact</strong>
+        <p>See how many neighbors Shoreline has helped, and how your support adds up.</p>
+        <a class="ocs__btn medium" href="#impact">See the Numbers</a>
     </div>
 </div>
 
