@@ -4,45 +4,71 @@ title: Shoreline Community Services
 description: Helping our neighbors in the Central Beach Area of San Diego.
 hide: true
 ---
+<!-- markdownlint-disable MD033 -->
+<style>
+.shoreline-home .ocs__grid-cell { text-align: center; }
+.shoreline-home .ocs__links { justify-content: center; }
+</style>
 
-# Shoreline Community Services
+<div class="shoreline-home">
 
-[Shoreline Community Services](https://shorelinecs.org) is a San Diego nonprofit in the Pacific Beach / Central Beach Area. It helps unsheltered individuals and families get the support they need.
+<div class="ocs__grid ocs__grid--standard cols-2">
+    <div class="ocs__grid-cell ocs__grid-cell--header">Shoreline Community Services</div>
+    <div class="ocs__grid-cell ocs__grid-cell--wide ocs__grid-cell--accent">
+        <h2>Everyone deserves a place to land.</h2>
+        <p>We help unsheltered individuals and families in Pacific Beach, Mission Beach, and La Jolla find shelter, food, and support.</p>
+        <div class="ocs__links">
+            <a class="ocs__btn large alert-red fill" href="#need-help">I Need Help</a>
+            <a class="ocs__btn large alert-green fill" href="#volunteer">Volunteer</a>
+            <a class="ocs__btn large alert-yellow fill" href="#donate">Donate</a>
+        </div>
+    </div>
+</div>
 
-Our project improves their website so it's easier to **get help**, **volunteer**, and **donate**.
+<br>
 
----
+<div class="ocs__grid ocs__grid--standard">
+    <div class="ocs__grid-cell ocs__grid-cell--header">How can we help you today?</div>
 
-## Need Help?
+    <div class="ocs__grid-cell" id="need-help">
+        <strong>Need Help?</strong>
+        <p>Find the nearest shelter, get directions, and reach our outreach team.</p>
+        <a class="ocs__btn medium alert-red" href="#need-help">Find Shelter</a>
+    </div>
 
-If you need shelter, food, or support, this section will give you directions to nearby shelters and contact information for outreach workers.
+    <div class="ocs__grid-cell" id="volunteer">
+        <strong>Volunteer</strong>
+        <p>See where help is needed most and pick a shift that works for you.</p>
+        <a class="ocs__btn medium alert-green" href="#volunteer">Pick a Shift</a>
+    </div>
 
-*(Coming soon)*
+    <div class="ocs__grid-cell" id="donate">
+        <strong>Donate</strong>
+        <p>Give money or the items local shelters need right now.</p>
+        <a class="ocs__btn medium alert-yellow" href="#donate">Give Today</a>
+    </div>
+</div>
 
-## Volunteer
+<br>
 
-Pick a shift from our calendar, and see a map of the areas with the most need in Pacific Beach, Mission Beach, and La Jolla.
+<div class="ocs__grid ocs__grid--standard cols-2">
+    <div class="ocs__grid-cell ocs__grid-cell--header">In an emergency</div>
+    <div class="ocs__grid-cell ocs__grid-cell--muted">
+        <strong>Call 911</strong>
+        <p>If you or someone near you is in danger.</p>
+    </div>
+    <div class="ocs__grid-cell ocs__grid-cell--muted">
+        <strong>Call 2-1-1 San Diego</strong>
+        <p>Free, 24/7 help finding shelter, food, and other services.</p>
+    </div>
+</div>
 
-*(Coming soon)*
+<br>
 
-## Donate
+<div class="ocs__links">
+    <a class="ocs__btn small" href="https://shorelinecs.org">Visit shorelinecs.org</a>
+    <a class="ocs__btn small" href="{{ '/capstone/shoreline-volunteer/' | relative_url }}">About This Project</a>
+</div>
 
-- **Give money:** see what your donation does, like *$50 = 1 meal + supplies*.
-- **Give items:** see what local shelters need right now.
-
-*(Coming soon)*
-
-## Our Impact
-
-A dashboard showing how many people Shoreline has helped, with charts you can filter by time period.
-
-*(Coming soon)*
-
----
-
-## About This Project
-
-This site is our team's AP Computer Science Principles project.
-
-- [Our ideation page](https://nkasse12.github.io/shoreline-group-project/)
-- [Shoreline Community Services](https://shorelinecs.org)
+</div>
+<!-- markdownlint-enable MD033 -->
