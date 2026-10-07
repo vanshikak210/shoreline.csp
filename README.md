@@ -439,7 +439,7 @@ UDL is not a method but a **design lens** to make learning **accessible and mean
 - **Burndown Charts** – Track group/team/individual progress
 - **In-Sprint Checkpoints** – Product Owner reviews, Demo products or features, receive feedback, plan iterations
 - **Close-Sprint Assessment** - Rubric close out, learning and competency demonstrations
-- **Retrospectives** – Reflect on process and teamwork, next steps
+- **Retrospectives** – Reflect on process and teamwork, next steps.
 
 ---
 
