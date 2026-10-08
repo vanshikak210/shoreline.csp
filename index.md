@@ -30,7 +30,7 @@ hide: true
 
 <section class="sl-hero" id="top">
     <div class="sl-container">
-        <h1>Everyone deserves a place to land.</h1>
+        <h1>Everyone deserves a place to live.</h1>
         <p>We help unsheltered individuals and families in Pacific Beach, Mission Beach, and La Jolla find shelter, food, and support.</p>
         <div class="ocs__links">
             <a class="ocs__btn large alert-red fill" href="#need-help">I Need Help</a>
