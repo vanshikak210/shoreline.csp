@@ -1,0 +1,190 @@
+// Shoreline Community Services home page styles (index.md)
+// The page is built from OCS grids and buttons. This file only re-points the OCS theme
+// variables to Shoreline's colors (sampled from shorelinecs.org) and lays out the
+// full-width page sections. Everything is scoped under .shoreline-site.
+
+$sl-teal: #43c0d4;
+$sl-green: #badc8f;
+$sl-navy: #1c244b;
+$sl-text: #3c3c3c;
+$sl-red: #cf2e2e;
+$sl-footer: #2a3235;
+$sl-heading-font: "Asap", "Helvetica Neue", Arial, sans-serif;
+$sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
+
+// The OCS user theme forces text and link colors with !important, reading them from
+// --pref-text-color and --pref-accent-color. Setting those variables (alongside color)
+// makes the theme apply Shoreline's colors instead of fighting it with more !important.
+@mixin sl-text-color($color) {
+  color: $color;
+  --pref-text-color: #{$color};
+}
+
+// The page template wraps content in a narrow column; break out so sections span the full window.
+.page-content:has(.shoreline-site) {
+  padding-top: 0;
+  overflow-x: clip;
+}
+
+.shoreline-site {
+  // OCS theme variables, re-pointed to Shoreline's palette.
+  --pref-bg-color: #fff;
+  --pref-accent-color: #{$sl-teal};
+  --panel: #fff;
+  --panel-mid: #f6fbfc;
+  --ui-border: #e3e8ea;
+  --red: #{$sl-red};
+
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  background: #fff;
+  @include sl-text-color($sl-text);
+  font-family: $sl-body-font;
+  line-height: 1.6;
+
+  // The template hides every h1 and left-aligns headings; undo that here.
+  h1, h2, h3 {
+    display: block;
+    text-align: inherit;
+    text-shadow: none;
+    font-family: $sl-heading-font;
+    @include sl-text-color($sl-navy);
+    margin: 0 0 0.5em;
+    line-height: 1.2;
+  }
+
+  // Only set the bottom margin so centered blocks (margin: 0 auto) keep their centering.
+  p { margin-top: 0; margin-bottom: 1em; }
+
+  a { text-decoration: none; }
+
+  // Shoreline's buttons are solid, so OCS "fill" becomes a solid tone with white text here.
+  // The !important only outranks the OCS user theme's forced link color, which would
+  // otherwise paint the text the same teal as the button.
+  .ocs__btn { font-family: $sl-heading-font; font-weight: 600; }
+  .ocs__btn.fill,
+  .ocs__btn.fill:hover,
+  .ocs__btn.fill:focus {
+    background: var(--ocs-btn-tone);
+    color: #fff !important;
+  }
+  .ocs__btn.fill:hover { filter: brightness(0.92); }
+
+  .ocs__links { justify-content: center; }
+  .ocs__grid { margin-block: 24px; }
+  .ocs__grid-cell h3 { font-size: 1.4rem; }
+  .ocs__grid-cell p { @include sl-text-color($sl-text); }
+}
+
+// Centers section content at a readable width.
+.sl-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+// ── Header ──
+.sl-header {
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  .sl-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-block: 14px;
+  }
+}
+
+.sl-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: $sl-heading-font;
+  line-height: 1.1;
+
+  &__sun {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fcb900 45%, $sl-teal 46%, $sl-teal 60%, transparent 61%);
+  }
+  &__name { font-size: 1.6rem; font-weight: 700; @include sl-text-color($sl-teal); }
+  &__tagline { font-size: 0.8rem; @include sl-text-color(#e6a23c); }
+}
+
+.sl-nav a {
+  font-family: $sl-heading-font;
+  font-weight: 500;
+  color: $sl-text;
+  --pref-accent-color: #{$sl-text};
+}
+
+// ── Hero ──
+.sl-hero {
+  background: linear-gradient(rgba(28, 36, 75, 0.55), rgba(28, 36, 75, 0.55)),
+              linear-gradient(135deg, $sl-teal, $sl-navy);
+  @include sl-text-color(#fff);
+  text-align: center;
+  padding: 110px 0;
+
+  h1 { @include sl-text-color(#fff); font-size: clamp(2.2rem, 5vw, 3.4rem); }
+  p { @include sl-text-color(#fff); font-size: 1.25rem; max-width: 640px; margin: 0 auto 1.6em; }
+
+  // Outline button reads white on the dark banner.
+  .ocs__btn.accent:not(.fill) {
+    --pref-accent-color: #fff;
+    background: transparent;
+    border-color: #fff;
+    color: #fff;
+  }
+}
+
+// ── Full-width sections ──
+.sl-section {
+  padding: 64px 0;
+  text-align: center;
+
+  &__intro { max-width: 720px; margin: 0 auto 1.5em; }
+
+  &--teal { background: $sl-teal; }
+  &--teal, &--teal h2, &--teal p { @include sl-text-color(#fff); }
+  &--teal &__lead { @include sl-text-color($sl-navy); font-weight: 600; font-size: 1.15rem; }
+
+  &--green { background: $sl-green; }
+  &--green &__intro { @include sl-text-color($sl-navy); }
+  &--green .ocs__grid-cell { text-align: left; }
+
+  // Red tone so the OCS header cell and borders read as urgent.
+  &--emergency {
+    background: #fff5f5;
+    --pref-accent-color: #{$sl-red};
+  }
+}
+
+.sl-note {
+  @include sl-text-color(#6b7280);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+// ── Footer ──
+.sl-footer {
+  background: $sl-footer;
+  @include sl-text-color(#cfd6d9);
+  padding: 40px 0;
+  text-align: center;
+  font-size: 0.9rem;
+
+  a { color: $sl-teal; --pref-accent-color: #{$sl-teal}; }
+  p { margin: 0.4em 0; }
+}
+
+@media (max-width: 768px) {
+  .sl-header .sl-container { justify-content: center; }
+}
