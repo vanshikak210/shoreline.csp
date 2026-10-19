@@ -54,6 +54,7 @@ Split logic into clear layers:
 * **Use `_projects`:** Leverage the modular project auto-registration system in the `_projects/` directory for new projects.
 * **System Expansion:** Work within the existing systems and expand them if needed, rather than creating completely new parallel architectures.
 * **Calendar pages:** Keep layout and modal styling out of `navigation/calendar.md`; use semantic classes and SCSS instead of utility-heavy inline markup.
+* **Calendar event edits:** Spring's `PUT /api/calendar/edit/{id}` rejects an empty `period` or `description`; send `Personal` for events with no course. Linked docs live on the description's last line (`Linked doc: <url>`, see `_projects/systems/calendar/js/CalendarDocLinks.js`); test with `node --test tests/calendar_doc_links.test.mjs`.
 * **Cross-origin APIs:** Spring endpoints consumed from `pages.opencodingsociety.com` should explicitly allow credentialed cross-origin requests.
 * **Documentation:** Create detailed documentation for difficult or complex implementations as necessary.
 * **Commenting:** Add comments for non-trivial logic, but keep them minimal and focused on *why* rather than *what*.
@@ -90,9 +91,11 @@ Split logic into clear layers:
 ### Project Registry & Styling
 * College report topics may include Java library permalinks in `supporting_lessons`, separate from owned `lessons`. Keep Java source ownership, articulation metadata, and weeks unchanged; label supporting references and link `/navigation/java-reference/` in curriculum navigation. Audit existing Java coverage before declaring gaps. Validate with `bundle exec ruby scripts/test_java_curriculum_references.rb`.
 
+* Flask sources belong to [_projects/lessons/flask/](_projects/lessons/flask/) with flat `notebooks/` and `docs/`. Keep `categories: [flask]` for Topics and preserve map `/python/flask/csp/`. The API hub `/python/flask/api` links only Jokes (CSP Week 9), Users (Week 10), and Microblog (Week 11); then students read Flask source for further API learning. Teach VS Code REST Client with the backend's shared `baseUrl`, prompted authentication, and `.http` files, not Postman. Trace users (`api/user.py`, `model/user.py`), jokes (`hacks/joke.py`, file-backed `hacks/jokes.py`), and microblog (`api/microblog_api.py`, `model/microblog.py`); distinguish manual checks from automated tests. Detailed model/SQL teaching belongs in a separate series. Retired API material is reviewed in the non-published `API_MATERIAL_REVIEW.md`; do not recreate duplicate API tutorials. Non-API Flask references remain. Publish docs before splitting the multi-course map. Test: `bundle exec ruby scripts/test_flask_project.rb`.
 * New projects must follow [_projects/REGISTRATION.md](_projects/REGISTRATION.md); architecture reference in [_projects/ARCHITECTURE.md](_projects/ARCHITECTURE.md).
 * Use SCSS-first styling; theme and styling conventions are in [README.md](README.md).
 * Theme presets ([assets/js/user-preferences.js](assets/js/user-preferences.js)) set every `span`, `div`, `p`, `li`, and heading to the theme's text color with `!important`. Put a button's icon and label straight inside the `ocs__btn`, like the Submit buttons in [_layouts/post.html](_layouts/post.html), not in a `<span>`; otherwise a `fill` button's label takes the theme's text color and can become unreadable.
+* Do not put `var(--panel)` or color values in a Mermaid `style` line: parentheses are parsed as node syntax. [_includes/mermaid.html](_includes/mermaid.html) reads the preference variables, and the `.mermaid` rules in [user-preferences.scss](_sass/open-coding/theme/user-preferences.scss) keep diagrams in sync after a theme change.
 
 ### Backend Boundary
 
