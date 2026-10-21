@@ -30,6 +30,7 @@ games/racing-game:dev
 # Lessons
 lessons/ap-frq-simulator
 lessons/cpt-concepts
+lessons/flask:dev
 lessons/game-lessons
 lessons/parallelAndComputinglesson
 lessons/robot-logic-game
@@ -37,10 +38,17 @@ lessons/sass
 lessons/python
 lessons/javascript
 lessons/java
+lessons/cs112
+lessons/cs113
+lessons/csa1
+lessons/csa2
+lessons/ds2
 
 # Systems
 systems/ai-ab-engine
 systems/calendar
+systems/blogs:dev
+systems/topics:dev
 systems/courses:dev
 systems/gamebuilder:dev
 systems/auto-generator

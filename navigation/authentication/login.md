@@ -63,6 +63,12 @@ show_reading_time: false
         <!-- Signup Form -->
         <form id="signupForm" onsubmit="handleSignupSubmit(event);">
             <div class="form-group">
+                <select id="signupRole">
+                    <option value="student" selected>I am a Student</option>
+                    <option value="mentor">I am a Mentor</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <input type="text" id="name" placeholder="Name" required>
             </div>
             <div class="form-group">
@@ -149,10 +155,10 @@ show_reading_time: false
             return true;
         }
 
-        if (password.length < 8) {
+        if (!meetsSpringPasswordRules(password)) {
             confirmField.classList.add('password-length');
             messageDiv.classList.add('error');
-            messageDiv.textContent = '✗ Passwords must be at least 8 characters long';
+            messageDiv.textContent = `✗ ${SPRING_PASSWORD_RULES}`;
             return false;
         }
 
@@ -180,13 +186,24 @@ show_reading_time: false
             return false;
         }
 
-        if (password.length < 8) {
-            alert('Password must be at least 8 characters long.');
+        if (!meetsSpringPasswordRules(password)) {
+            alert(SPRING_PASSWORD_RULES);
             document.getElementById('signupPassword').focus();
             return false;
         }
 
         return true;
+    }
+
+    // Mirrors Person.checkPassword() in Spring. Flask only needs 8 characters, so a
+    // weaker password used to create the Flask account while Spring silently refused it.
+    const SPRING_PASSWORD_RULES = 'Password needs 8+ characters with an uppercase letter, a lowercase letter, a number, and one of ` ~ ! @ # $ % ^ & * ( )';
+    function meetsSpringPasswordRules(password) {
+        return password.length >= 8
+            && /[A-Z]/.test(password)
+            && /[a-z]/.test(password)
+            && /[0-9]/.test(password)
+            && /[`~!@#$%^&*()]/.test(password);
     }
 
     // Backend status management
@@ -217,7 +234,7 @@ show_reading_time: false
         }
     }
 
-    function updateOverallStatus() {
+    function updateOverallStatus(springErrorMessage = '') {
         const flaskEl = document.getElementById('flaskStatus');
         const springEl = document.getElementById('springStatus');
         const overallEl = document.getElementById('overallStatus');
@@ -234,7 +251,11 @@ show_reading_time: false
             overallEl.textContent = '🎉 Account created on both backends! You can now login.';
         } else if (flaskSuccess && springError) {
             overallEl.classList.add('partial');
-            overallEl.textContent = '⚠️ Flask account created successfully! Spring failed but you can still login.';
+            // Without a Spring account, DMs, calendar and announcements fail after login,
+            // so say why Spring failed instead of implying everything works.
+            overallEl.textContent = '⚠️ Flask account created, but Spring signup failed'
+                + (springErrorMessage ? `: ${springErrorMessage}` : '.')
+                + ' DMs, calendar and announcements need a working Spring account. Ask your teacher to fix it before logging in.';
         } else if (flaskError && springSuccess) {
             overallEl.classList.add('partial');
             overallEl.textContent = '⚠️ Spring account created! Flask failed - please try again.';
@@ -243,6 +264,16 @@ show_reading_time: false
             overallEl.textContent = '💥 Both backends failed. Please check your information and try again.';
         }
     }
+
+    // A mentor has no student ID or school, so those fields are hidden and not required.
+    document.getElementById('signupRole').addEventListener('change', function () {
+        const isMentor = this.value === 'mentor';
+        ['signupSid', 'signupSchool'].forEach(id => {
+            const field = document.getElementById(id);
+            field.required = !isMentor;
+            field.closest('.form-group').style.display = isMentor ? 'none' : '';
+        });
+    });
 
     window.handleSignupSubmit = function(event) {
         event.preventDefault();
@@ -269,10 +300,16 @@ show_reading_time: false
             password: document.getElementById("signupPassword").value,
             kasmServerNeeded: false,
             kasm_server_needed: false,
+            accountType: document.getElementById("signupRole").value,
         };
 
-        // Show OAuth verification
-        showOAuthVerification();
+        // A mentor cannot use a school email, so they skip it and wait for a Teacher/Admin
+        // to verify the account. A student verifies with Google first.
+        if (signupFormData.accountType === 'mentor') {
+            signup();
+        } else {
+            showOAuthVerification();
+        }
     }
 
     function showOAuthVerification() {
@@ -304,15 +341,12 @@ show_reading_time: false
                 return;
             }
             verifiedSchoolEmail = email;
+            signupFormData.idToken = response.credential;
             showOAuthStatus(`✅ School email verified: ${email}`);
 
             setTimeout(() => {
                 document.getElementById('oauth-verification').style.display = 'none';
                 document.getElementById('signupForm').style.display = 'block';
-
-                console.log("About to call signup() with stored data:", signupFormData);
-                console.log("pythonURI:", pythonURI);
-
 
                 signup();
             }, 1500);
@@ -360,17 +394,40 @@ show_reading_time: false
         let pythonPromise = new Promise((resolve) => {
             window.pythonLogin(resolve);
         });
-        Promise.allSettled([javaPromise, pythonPromise]).then(() => {
-            // Only redirect after both have completed (success or fail)
-            window.location.href = '{{site.baseurl}}/profile';
+        // pythonPromise only settles when Flask accepts the login; on a Flask failure
+        // login() shows the error in #message and the page stays put.
+        Promise.all([javaPromise, pythonPromise]).then(([springLoggedIn]) => {
+            if (springLoggedIn) {
+                window.location.href = '{{site.baseurl}}/profile';
+                return;
+            }
+            showSpringLoginWarning();
         });
     };
+    // Flask accepted the login but Spring did not. The navbar would still show the
+    // user as signed in, while every Spring feature returns 401, so say so here.
+    function showSpringLoginWarning() {
+        const messageEl = document.getElementById('message');
+        messageEl.innerHTML = '';
+        messageEl.append(
+            'Signed in to Flask, but the Spring server rejected this login, so DMs, calendar and announcements will not work. '
+            + 'Your Spring password may differ from your Flask password. ',
+            springLink(`${javaURI}/mvc/person/reset`, 'Reset your Spring password'),
+            ' or ask your teacher, then log in again. ',
+            springLink('{{site.baseurl}}/profile', 'Continue anyway'),
+        );
+    }
+    function springLink(href, label) {
+        const link = document.createElement('a');
+        link.href = href;
+        link.textContent = label;
+        return link;
+    }
     // Function to handle Python login
     window.pythonLogin = function (done) {
         const options = {
             URL: `${pythonURI}/api/authenticate`,
             callback: function() {
-                pythonDatabase();
                 if (done) done();
             },
             message: "message",
@@ -420,24 +477,13 @@ show_reading_time: false
             })
             .then(data => {
                 console.log("Java database response:", data);
-                if (done) done();
+                if (done) done(true);
             })
             .catch(error => {
-                console.error("Login failed:", error.message);
-                // Spring login is optional for this dual-backend flow.
-                console.warn("Spring login unavailable; continuing with Flask auth flow.");
-                if (done) done();
+                console.error("Spring login failed:", error.message);
+                if (done) done(false);
             });
     };
-    // Function to fetch and display Python data
-    function pythonDatabase() {
-        // Skip the /api/id fetch due to CORS restrictions with credentials mode.
-        // The user is already authenticated (token in cookie), so just redirect to profile.
-        console.log("Authentication successful, redirecting to profile...");
-        setTimeout(() => {
-            window.location.href = '{{site.baseurl}}/profile';
-        }, 1000);
-    }  
     window.signup = async function () {
         const signupButton = document.querySelector(".signup-card button");
         // Disable the button and change its color
@@ -459,12 +505,7 @@ show_reading_time: false
             kasm_server_needed: false,
         };
 
-        if (verifiedSchoolEmail) {
-            console.log("Account created with verified school email:", verifiedSchoolEmail);
-        }
-
-        console.log("Sending this data to Flask:", JSON.stringify(data, null, 2));
-        console.log("Request URL:", `${pythonURI}/api/user`);
+        // Never log `data`: it holds the plaintext password and the Google ID token.
 
         const flaskRequest = {
             ...fetchOptions,
@@ -501,18 +542,20 @@ show_reading_time: false
             fetch(`${javaURI}/api/person/create`, springRequest)
                 .then(async (springResponse) => {
                     const springRaw = await springResponse.text();
+                    let springErrorMessage = '';
                     if (springResponse.ok) {
                         updateBackendStatus('spring', 'success');
                     } else {
                         console.warn("Spring signup failed:", springResponse.status, springRaw);
+                        springErrorMessage = readSpringError(springRaw, springResponse.status);
                         updateBackendStatus('spring', 'error');
                     }
-                    setTimeout(updateOverallStatus, 500);
+                    setTimeout(() => updateOverallStatus(springErrorMessage), 500);
                 })
                 .catch((springError) => {
                     console.warn("Spring signup error:", springError.message);
                     updateBackendStatus('spring', 'error');
-                    setTimeout(updateOverallStatus, 500);
+                    setTimeout(() => updateOverallStatus('Spring server unreachable'), 500);
                 });
         } catch (error) {
             console.error("Flask signup error:", error);
@@ -523,6 +566,14 @@ show_reading_time: false
             signupButton.disabled = false;
             signupButton.classList.remove("disabled");
         }
+    }
+    // Spring's /api/person/create answers errors as {"error": "..."}, e.g. a uid conflict.
+    function readSpringError(raw, status) {
+        try {
+            const body = JSON.parse(raw);
+            if (body && body.error) return body.error;
+        } catch (_) { /* not JSON */ }
+        return `HTTP ${status}`;
     }
     function javaDatabase() {
         const URL = `${javaURI}/api/person/get`;

@@ -1,4 +1,5 @@
-import { baseurl, pythonURI, fetchOptions } from './config.js';
+import { baseurl, pythonURI, javaURI, fetchOptions } from './config.js';
+import { savedCourse, selectEntryCourse, courseEntryUrl } from '../course-entry.js';
 
 console.log("login.js loaded");
 
@@ -49,6 +50,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }
 
+                    warnIfSpringSignedOut(loginArea);
+
                     // Update navigation AFTER dropdown is set up
                     waitForElement('.trigger', 20, 100).then(() => {
                         updateNavigation(true); // User is logged in
@@ -94,6 +97,27 @@ function waitForElement(selector, maxAttempts = 20, interval = 100) {
     });
 }
 
+// The name in the navbar only reflects the Flask login. DMs, calendar and announcements
+// need a separate Spring login, which can fail on its own (e.g. a different Spring
+// password), so flag that in the account menu instead of letting those features 401 silently.
+function warnIfSpringSignedOut(loginArea) {
+    fetch(`${javaURI}/api/person/get`, fetchOptions)
+        .then(response => {
+            if (response.ok) return;
+            console.warn("Signed in to Flask but not Spring: HTTP " + response.status);
+            const button = loginArea.querySelector('.dropbtn');
+            const menu = loginArea.querySelector('.dropdown-content');
+            if (!button || !menu) return;
+            button.textContent = `⚠️ ${button.textContent}`;
+            button.title = 'Not signed in to Spring: DMs, calendar and announcements will not load';
+            const relogin = document.createElement('a');
+            relogin.href = `${baseurl}/login`;
+            relogin.textContent = '⚠️ Spring sign-in failed. Log in again';
+            menu.prepend(relogin);
+        })
+        .catch(err => console.warn("Spring session check failed:", err));
+}
+
 function getCredentials(baseurl) {
     const URL = pythonURI + '/api/id';
     return fetch(URL, fetchOptions)
@@ -124,20 +148,12 @@ async function updateNavigation(isLoggedIn) {
         return;
     }
 
-    // Find all page links in navigation
-    const links = trigger.querySelectorAll('.page-link');
+    // Only the course entry changes with enrollment.
+    const links = trigger.querySelectorAll('[data-course-entry]');
     console.log("Found links:", links.length);
     
     if (!isLoggedIn) {
-        // Not logged in: show "Blogs"
-        links.forEach(link => {
-            const href = link.getAttribute('href');
-            if (href && (href.includes('/navigation/blogs') || href.includes('/navigation/courses'))) {
-                link.setAttribute('href', `${baseurl}/navigation/blogs/`);
-                link.textContent = 'Blogs';
-                console.log("Updated link to Blogs");
-            }
-        });
+        updateCourseEntry(links);
         return;
     }
 
@@ -148,8 +164,8 @@ async function updateNavigation(isLoggedIn) {
 
         if (!response.ok) {
             console.warn("Course fetch failed:", response.status);
-            // Error fetching courses, default to Courses page
-            updateNavLink(links, `${baseurl}/navigation/courses/`, 'Courses');
+            // Keep direct entry available when enrollment cannot be loaded.
+            updateCourseEntry(links);
             return;
         }
 
@@ -158,51 +174,20 @@ async function updateNavigation(isLoggedIn) {
         const classes = data.class || [];
         console.log("User classes:", classes);
 
-        const courseMap = {
-            'CSSE': { name: 'CSSE', url: `${baseurl}/navigation/courses/csse` },
-            'CSP': { name: 'APCSP', url: `${baseurl}/navigation/courses/csp` },
-            'CSA': { name: 'APCSA', url: `${baseurl}/navigation/courses/csa` },
-            'CSH': { name: 'CSH', url: `${baseurl}/navigation/courses/csh` }
-        };
-
-        // Filter to valid courses only
-        const userCourses = classes
-            .filter(cls => courseMap[cls])
-            .map(cls => courseMap[cls]);
-        
-        console.log("Valid user courses:", userCourses);
-
-        if (userCourses.length === 0) {
-            // No courses: link to Courses page with message
-            console.log("No courses, linking to Courses page");
-            updateNavLink(links, `${baseurl}/navigation/courses/`, 'Courses');
-        } else if (userCourses.length === 1) {
-            // One course: direct link to that course
-            const course = userCourses[0];
-            console.log("One course, direct link to:", course.name);
-            updateNavLink(links, course.url, course.name);
-        } else {
-            // Multiple courses: link to Courses page with table
-            console.log("Multiple courses, linking to Courses page");
-            updateNavLink(links, `${baseurl}/navigation/courses/`, 'Courses');
-        }
+        updateCourseEntry(links, classes);
 
     } catch (error) {
         console.error('Error fetching courses for nav:', error);
-        // On error, default to Courses page
-        updateNavLink(links, `${baseurl}/navigation/courses/`, 'Courses');
+        updateCourseEntry(links);
     }
 }
 
-// Helper function to update a single nav link
-function updateNavLink(links, url, text) {
-    console.log("Updating nav link to:", text, url);
+function updateCourseEntry(links, classes = []) {
     links.forEach(link => {
-        const href = link.getAttribute('href');
-        if (href && (href.includes('/navigation/blog') || href.includes('/navigation/courses'))) {
-            link.setAttribute('href', url);
-            link.textContent = text;
-            console.log("Link updated successfully");
-        }
+        const course = selectEntryCourse(classes, savedCourse(), link.dataset.defaultCourse);
+        link.href = courseEntryUrl(baseurl, course);
+        link.textContent = course === 'csp' || course === 'csa' ? `AP${course.toUpperCase()}` : course.toUpperCase();
     });
 }
+
+updateCourseEntry(document.querySelectorAll('[data-course-entry]'));
