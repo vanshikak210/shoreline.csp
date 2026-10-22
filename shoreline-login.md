@@ -58,37 +58,71 @@ custom_header: true
             <div class="ocs__grid-cell">
                 <h3>Donate</h3>
                 <p>Give money or the items local shelters need right now.</p>
-                <a class="ocs__btn medium accent fill" href="{{ '/' | relative_url }}#donate">I Want to Donate</a>
+                <button type="button" class="ocs__btn medium accent fill" data-choice="donate" data-redirect="{{ '/' | relative_url }}#donate">I Want to Donate</button>
             </div>
             <div class="ocs__grid-cell">
                 <h3>Volunteer</h3>
                 <p>See where help is needed most and pick a shift that works for you.</p>
-                <a class="ocs__btn medium accent fill" href="{{ '/' | relative_url }}#volunteer">I Want to Volunteer</a>
+                <button type="button" class="ocs__btn medium accent fill" data-choice="volunteer" data-redirect="{{ '/' | relative_url }}#volunteer">I Want to Volunteer</button>
             </div>
             <div class="ocs__grid-cell">
                 <h3>None</h3>
                 <p>Not ready to commit to either just yet? That's okay too.</p>
-                <a class="ocs__btn medium accent" href="{{ '/' | relative_url }}">Maybe Later</a>
+                <button type="button" class="ocs__btn medium accent" data-choice="none" data-redirect="{{ '/' | relative_url }}">Maybe Later</button>
             </div>
         </div>
+        <p id="shorelineSurveyStatus" class="sl-note"></p>
     </div>
 </section>
 
 </div>
 <!-- markdownlint-enable MD033 -->
 
-<script>
-// Front-end demo only: Shoreline has no account backend yet, so this just greets
-// the visitor by name and routes them to the Volunteer/Donate sections below.
-// The password is never stored or sent anywhere.
+<script type="module">
+import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
+
+// Shoreline has no account backend yet. The survey POSTs to a placeholder endpoint
+// (/api/shoreline/survey) that does not exist on the Flask server yet; someone still
+// needs to add that route server-side. The password is never sent to it - only the
+// name/email collected on this page, plus the donate/volunteer/none choice.
+let visitorName = '';
+let visitorEmail = '';
+
 document.getElementById('shorelineLoginForm').addEventListener('submit', function (event) {
     event.preventDefault();
-    const name = document.getElementById('shorelineName').value.trim();
+    visitorName = document.getElementById('shorelineName').value.trim();
+    visitorEmail = document.getElementById('shorelineEmail').value.trim();
 
     document.getElementById('shoreline-login-form').hidden = true;
     const surveySection = document.getElementById('shoreline-login-survey');
     surveySection.hidden = false;
-    document.getElementById('shorelineSurveyGreeting').textContent = name ? `Welcome, ${name}!` : 'Welcome!';
+    document.getElementById('shorelineSurveyGreeting').textContent = visitorName ? `Welcome, ${visitorName}!` : 'Welcome!';
     surveySection.scrollIntoView({ behavior: 'smooth' });
+});
+
+document.querySelectorAll('#shoreline-login-survey [data-choice]').forEach(button => {
+    button.addEventListener('click', async () => {
+        const statusEl = document.getElementById('shorelineSurveyStatus');
+        statusEl.textContent = 'Saving...';
+
+        try {
+            const response = await fetch(`${pythonURI}/api/shoreline/survey`, {
+                ...fetchOptions,
+                method: 'POST',
+                body: JSON.stringify({
+                    name: visitorName,
+                    email: visitorEmail,
+                    choice: button.dataset.choice,
+                }),
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        } catch (error) {
+            // Best-effort: still send the visitor on their way even if saving failed
+            // (expected until the backend route exists).
+            console.warn('Could not save survey choice:', error);
+        }
+
+        window.location.href = button.dataset.redirect;
+    });
 });
 </script>
