@@ -52,18 +52,23 @@ custom_header: true
 <section class="sl-section sl-section--green" id="shoreline-login-survey" hidden>
     <div class="sl-container">
         <h2 id="shorelineSurveyGreeting">Welcome!</h2>
-        <p class="sl-section__intro">What brings you to Shoreline today?</p>
+        <p class="sl-section__intro">Do you want to donate, volunteer, or neither for now?</p>
 
-        <div class="ocs__grid ocs__grid--card cols-2">
+        <div class="ocs__grid ocs__grid--card cols-3">
+            <div class="ocs__grid-cell">
+                <h3>Donate</h3>
+                <p>Give money or the items local shelters need right now.</p>
+                <a class="ocs__btn medium accent fill" href="{{ '/' | relative_url }}#donate">I Want to Donate</a>
+            </div>
             <div class="ocs__grid-cell">
                 <h3>Volunteer</h3>
                 <p>See where help is needed most and pick a shift that works for you.</p>
                 <a class="ocs__btn medium accent fill" href="{{ '/' | relative_url }}#volunteer">I Want to Volunteer</a>
             </div>
             <div class="ocs__grid-cell">
-                <h3>Donate</h3>
-                <p>Give money or the items local shelters need right now.</p>
-                <a class="ocs__btn medium accent fill" href="{{ '/' | relative_url }}#donate">I Want to Donate</a>
+                <h3>None</h3>
+                <p>Not ready to commit to either just yet? That's okay too.</p>
+                <a class="ocs__btn medium accent" href="{{ '/' | relative_url }}">Maybe Later</a>
             </div>
         </div>
     </div>
