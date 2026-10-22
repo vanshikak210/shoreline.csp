@@ -26,7 +26,7 @@ custom_header: true
             <a href="#donate">Donate</a>
         </nav>
         <div class="ocs__links">
-            <a id="loginArea" class="ocs__btn medium accent" href="{{site.baseurl}}/login">Login</a>
+            <a id="loginArea" class="ocs__btn medium accent" href="{{ '/shoreline-login' | relative_url }}">Login</a>
             <a class="ocs__btn medium accent fill" href="#donate">Donate Now</a>
         </div>
     </div>
