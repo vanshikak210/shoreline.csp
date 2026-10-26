@@ -390,7 +390,7 @@ show_reading_time: false
     window.loginBoth = function () {
         // A Flask-only site (spring: false in _config.yml) signs in to Flask alone.
         if (!springEnabled) {
-            window.pythonLogin(() => { window.location.href = '{{site.baseurl}}/profile'; });
+            window.pythonLogin(() => { window.location.href = 'https://vanshikak210.github.io/shoreline.csp/shoreline-login'; });
             return;
         }
         // Wrap both logins in Promises and only redirect after both finish
@@ -404,7 +404,7 @@ show_reading_time: false
         // login() shows the error in #message and the page stays put.
         Promise.all([javaPromise, pythonPromise]).then(([springLoggedIn]) => {
             if (springLoggedIn) {
-                window.location.href = '{{site.baseurl}}/profile';
+                window.location.href = 'https://vanshikak210.github.io/shoreline.csp/shoreline-login';
                 return;
             }
             showSpringLoginWarning();
@@ -420,7 +420,7 @@ show_reading_time: false
             + 'Your Spring password may differ from your Flask password. ',
             springLink(`${javaURI}/mvc/person/reset`, 'Reset your Spring password'),
             ' or ask your teacher, then log in again. ',
-            springLink('{{site.baseurl}}/profile', 'Continue anyway'),
+            springLink('https://vanshikak210.github.io/shoreline.csp/shoreline-login', 'Continue anyway'),
         );
     }
     function springLink(href, label) {
