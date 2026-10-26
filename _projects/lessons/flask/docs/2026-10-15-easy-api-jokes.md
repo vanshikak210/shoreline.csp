@@ -3,7 +3,7 @@ layout: post
 title: Easy API - Jokes
 description: Read a small Flask API, send REST Client requests, and follow its file-backed data calls.
 permalink: /python/flask/api/jokes
-categories: [flask, Python, APIs]
+categories: [Flask, Python, APIs]
 lesson_group: Flask
 toc: true
 ---

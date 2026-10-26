@@ -5,7 +5,7 @@ previously scattered through `_notebooks/CSP/flask`, `_posts/CSP/flask`, and
 the Foundation tools references. Notebook sources are flat in `notebooks/`;
 authored Markdown and historical Markdown-only exports are in `docs/`.
 Edit these sources, not the published copies. Authored documents mirror into
-`_posts/flask/docs/`; converted notebooks remain under `_posts/projects/flask/`.
+`_posts/projects/flask/docs/`; converted notebooks remain under `_posts/projects/flask/`.
 
 The existing map remains at `/python/flask/csp/`; its unsplit source is the
 document in `docs/` with permalink `/python/flask`. Preserve its CSP/CSA split and permalink.
@@ -76,7 +76,7 @@ bundle exec ruby scripts/test_flask_project.rb
 
 The Flask project is tagged `:dev`. The normal workflow publishes notebooks,
 Markdown, and multi-course map pages before Jekyll renders the Topics index.
-`distribution.json` maps the entire `docs/` directory to `_posts/flask/docs/`
+`distribution.json` maps the entire `docs/` directory to `_posts/projects/flask/docs/`
 recursively. New, renamed, and moved documents need no manifest edits. Keep
 dated post filenames and stable frontmatter permalinks; filenames determine
 generated paths, while permalinks determine public URLs. Publication removes
@@ -86,3 +86,10 @@ that have been edited independently.
 The shared `docs` target delegates to this directory mapping instead of writing
 a second date-prefixed copy. Both targets use the same publisher and ownership
 cache. Tests locate the key documents by permalink, not by their filenames.
+
+Both outputs now live under the template's `_posts/projects/flask/` cleanup
+root and are ignored as generated files. `make clean` removes the published
+copies, not the sources; the next Flask build republishes them. An existing
+publication cache also removes unchanged copies from the old `_posts/flask/docs/`
+destination when the new mapping is first published. Public permalinks do not
+change.

@@ -3,7 +3,7 @@ layout: post
 title: Microblog API
 description: Read authenticated microblog handlers, filtering, validation, permissions, and their model calls.
 permalink: /python/flask/api/microblog
-categories: [flask, Python, APIs]
+categories: [Flask, Python, APIs]
 lesson_group: Flask
 toc: true
 ---

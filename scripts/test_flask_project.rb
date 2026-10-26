@@ -160,9 +160,11 @@ Dir.mktmpdir("flask-publication-") do |destination|
   ProjectPublisher.run("publish", PROJECT, destination)
   Dir[File.join(PROJECT, "docs/**/*.md")].each do |source|
     relative = Pathname.new(source).relative_path_from(Pathname.new(File.join(PROJECT, "docs"))).to_s
-    output = File.join(destination, "_posts/flask/docs", relative)
+    output = File.join(destination, "_posts/projects/flask/docs", relative)
     assert(File.exist?(output) && File.read(output) == File.read(source),
            "Markdown is published before course splitting without duplicate output names: #{source}")
   end
+  assert(!Dir.exist?(File.join(destination, "_posts/flask")),
+         "Flask documentation stays inside the standard project output root")
 end
 puts "PASS: #{documents.size} Flask sources, API hub, three weekly API lessons, and retained non-API references"
