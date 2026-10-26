@@ -3,6 +3,7 @@ layout: opencs
 title: Shoreline Community Services
 description: Helping our neighbors in the Central Beach Area of San Diego.
 hide: true
+custom_header: true
 ---
 <!-- markdownlint-disable MD033 -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap">
@@ -24,7 +25,10 @@ hide: true
             <a href="#volunteer">Volunteer</a>
             <a href="#donate">Donate</a>
         </nav>
-        <a class="ocs__btn medium accent fill" href="#donate">Donate Now</a>
+        <div class="ocs__links">
+            <a id="loginArea" class="ocs__btn medium accent" href="{{ '/shoreline-login' | relative_url }}">Login</a>
+            <a class="ocs__btn medium accent fill" href="#donate">Donate Now</a>
+        </div>
     </div>
 </header>
 

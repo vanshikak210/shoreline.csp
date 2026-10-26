@@ -1,0 +1,14 @@
+<section class="get-involved" aria-labelledby="get-involved-heading">
+  <h2 id="get-involved-heading">Get Involved with Shoreline</h2>
+  <p id="get-involved-state" role="status" aria-live="polite">Checking your answer…</p>
+  <div class="get-involved-actions">
+    <button class="ocs__btn large alert-red fill" id="get-involved-donate" type="button" disabled>💝 I want to Donate</button>
+    <button class="ocs__btn large accent fill" id="get-involved-volunteer" type="button" disabled>🤝 I want to Volunteer</button>
+  </div>
+  <p id="get-involved-message" role="status" aria-live="polite"></p>
+  <p class="get-involved-note">You can change your answer any time — this just helps us point you to the right next step.</p>
+</section>
+<script type="module">
+  import { initGetInvolved } from '{{ site.baseurl }}/assets/js/profile/get-involved.js';
+  initGetInvolved(document.querySelector('.get-involved'));
+</script>

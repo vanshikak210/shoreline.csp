@@ -1,4 +1,4 @@
-import { baseurl, pythonURI, javaURI, fetchOptions, springEnabled } from './config.js';
+import { baseurl, pythonURI, fetchOptions } from './config.js';
 import { savedCourse, selectEntryCourse, courseEntryUrl } from '../course-entry.js';
 
 console.log("login.js loaded");
@@ -50,8 +50,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }
 
-                    warnIfSpringSignedOut(loginArea);
-
                     // Update navigation AFTER dropdown is set up
                     waitForElement('.trigger', 20, 100).then(() => {
                         updateNavigation(true); // User is logged in
@@ -95,29 +93,6 @@ function waitForElement(selector, maxAttempts = 20, interval = 100) {
         }
         check();
     });
-}
-
-// The name in the navbar only reflects the Flask login. DMs, calendar and announcements
-// need a separate Spring login, which can fail on its own (e.g. a different Spring
-// password), so flag that in the account menu instead of letting those features 401 silently.
-// A Flask-only site (spring: false in _config.yml) has no Spring login to check.
-function warnIfSpringSignedOut(loginArea) {
-    if (!springEnabled) return;
-    fetch(`${javaURI}/api/person/get`, fetchOptions)
-        .then(response => {
-            if (response.ok) return;
-            console.warn("Signed in to Flask but not Spring: HTTP " + response.status);
-            const button = loginArea.querySelector('.dropbtn');
-            const menu = loginArea.querySelector('.dropdown-content');
-            if (!button || !menu) return;
-            button.textContent = `⚠️ ${button.textContent}`;
-            button.title = 'Not signed in to Spring: DMs, calendar and announcements will not load';
-            const relogin = document.createElement('a');
-            relogin.href = `${baseurl}/login`;
-            relogin.textContent = '⚠️ Spring sign-in failed. Log in again';
-            menu.prepend(relogin);
-        })
-        .catch(err => console.warn("Spring session check failed:", err));
 }
 
 function getCredentials(baseurl) {
