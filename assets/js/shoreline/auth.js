@@ -48,16 +48,22 @@ export async function shorelineLogin(uid, password) {
     return user;
 }
 
-/** POST /api/user then log in. `sid` is required by the OCS user model; Shoreline users reuse their uid. */
+/**
+ * POST /api/shoreline/signup then log in. Shoreline has its own signup route because the
+ * OCS /api/user route only accepts real GitHub usernames and leaves accounts inactive
+ * until a teacher approves them (see docs/shoreline-backend/shoreline.py).
+ */
 export async function shorelineSignup({ name, uid, email, password }) {
-    const res = await fetch(`${pythonURI}/api/user`, {
+    const res = await fetch(`${pythonURI}/api/shoreline/signup`, {
         ...fetchOptions,
         method: 'POST',
-        body: JSON.stringify({ name, uid, email, password, sid: uid, role: 'User', kasm_server_needed: false }),
+        body: JSON.stringify({ name, uid, email, password }),
     });
     const data = await readJson(res);
-    if (!res.ok || data.success === false) {
-        throw new Error(data.message || `Sign up failed (${res.status})`);
+    if (!res.ok) {
+        throw new Error(res.status === 404
+            ? 'Signup route missing on the Flask server: add api/shoreline.py (see docs/shoreline-backend).'
+            : (data.message || `Sign up failed (${res.status})`));
     }
     return shorelineLogin(uid, password);
 }
