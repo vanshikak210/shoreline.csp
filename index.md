@@ -26,7 +26,7 @@ custom_header: true
             <a href="#donate">Donate</a>
         </nav>
         <div class="ocs__links">
-            <a id="loginArea" class="ocs__btn medium accent" href="{{ '/shoreline-login' | relative_url }}">Login</a>
+            <span id="shorelineAuthArea"><a class="ocs__btn medium accent" href="{{ '/shoreline-login' | relative_url }}">Login</a></span>
             <a class="ocs__btn medium accent fill" href="#donate">Donate Now</a>
         </div>
     </div>
@@ -129,3 +129,8 @@ custom_header: true
 
 </div>
 <!-- markdownlint-enable MD033 -->
+
+<script type="module">
+import { renderShorelineAuth } from '{{ site.baseurl }}/assets/js/shoreline/auth.js';
+renderShorelineAuth(document.getElementById('shorelineAuthArea'));
+</script>
