@@ -150,3 +150,7 @@ api.add_resource(SurveyAllAPI, "/survey/all")
 def initShorelineSurveys():
     with app.app_context():
         db.create_all()
+
+
+# Create the shoreline_surveys table on startup if it doesn't exist yet.
+initShorelineSurveys()
