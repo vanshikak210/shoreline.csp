@@ -20,30 +20,37 @@ custom_header: true
                 <span class="sl-logo__tagline">Community Services</span>
             </span>
         </a>
+        <span id="shorelineAuthArea"></span>
     </div>
 </header>
 
 <section class="sl-section" id="shoreline-login-form">
     <div class="sl-container">
-        <h2>Sign In</h2>
-        <p class="sl-section__intro">Tell us a bit about yourself so we can point you the right way.</p>
+        <h2 id="shorelineAuthTitle">Sign In</h2>
+        <p class="sl-section__intro">Sign in so we can remember you and point you the right way.</p>
+
+        <div class="ocs__links sl-auth-tabs" role="tablist">
+            <button type="button" class="ocs__btn medium accent fill" data-tab="login" aria-selected="true">Sign In</button>
+            <button type="button" class="ocs__btn medium accent" data-tab="signup" aria-selected="false">Create Account</button>
+        </div>
 
         <div class="ocs__grid ocs__grid--standard cols-1">
             <div class="ocs__grid-cell">
-                <form id="shorelineLoginForm">
-                    <p>
-                        <input class="ocs__input medium" type="text" id="shorelineName" placeholder="Name" required>
-                    </p>
-                    <p>
-                        <input class="ocs__input medium" type="email" id="shorelineEmail" placeholder="Email" required>
-                    </p>
-                    <p>
-                        <input class="ocs__input medium" type="password" id="shorelinePassword" placeholder="Password" required>
-                    </p>
-                    <p>
-                        <button type="submit" class="ocs__btn medium accent fill">Continue</button>
-                    </p>
+                <form id="shorelineLoginForm" data-panel="login">
+                    <p><input class="ocs__input medium" type="text" id="loginUid" placeholder="Username" autocomplete="username" required></p>
+                    <p><input class="ocs__input medium" type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" required></p>
+                    <p><button type="submit" class="ocs__btn medium accent fill">Continue</button></p>
                 </form>
+
+                <form id="shorelineSignupForm" data-panel="signup" hidden>
+                    <p><input class="ocs__input medium" type="text" id="signupName" placeholder="Full name" autocomplete="name" required></p>
+                    <p><input class="ocs__input medium" type="text" id="signupUid" placeholder="Username" autocomplete="username" required></p>
+                    <p><input class="ocs__input medium" type="email" id="signupEmail" placeholder="Email" autocomplete="email" required></p>
+                    <p><input class="ocs__input medium" type="password" id="signupPassword" placeholder="Password" autocomplete="new-password" minlength="6" required></p>
+                    <p><button type="submit" class="ocs__btn medium accent fill">Create Account</button></p>
+                </form>
+
+                <p id="shorelineAuthMessage" class="sl-note" role="alert"></p>
             </div>
         </div>
     </div>
@@ -79,50 +86,90 @@ custom_header: true
 <!-- markdownlint-enable MD033 -->
 
 <script type="module">
-import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
+import {
+    getShorelineUser, shorelineLogin, shorelineSignup, saveSurveyChoice, renderShorelineAuth
+} from '{{ site.baseurl }}/assets/js/shoreline/auth.js';
 
-// Shoreline has no account backend yet. The survey POSTs to a placeholder endpoint
-// (/api/shoreline/survey) that does not exist on the Flask server yet; someone still
-// needs to add that route server-side. The password is never sent to it - only the
-// name/email collected on this page, plus the donate/volunteer/none choice.
-let visitorName = '';
-let visitorEmail = '';
+const loginSection = document.getElementById('shoreline-login-form');
+const surveySection = document.getElementById('shoreline-login-survey');
+const messageEl = document.getElementById('shorelineAuthMessage');
 
-document.getElementById('shorelineLoginForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-    visitorName = document.getElementById('shorelineName').value.trim();
-    visitorEmail = document.getElementById('shorelineEmail').value.trim();
-
-    document.getElementById('shoreline-login-form').hidden = true;
-    const surveySection = document.getElementById('shoreline-login-survey');
+function showSurvey(user) {
+    loginSection.hidden = true;
     surveySection.hidden = false;
-    document.getElementById('shorelineSurveyGreeting').textContent = visitorName ? `Welcome, ${visitorName}!` : 'Welcome!';
+    document.getElementById('shorelineSurveyGreeting').textContent = user?.name ? `Welcome, ${user.name}!` : 'Welcome!';
     surveySection.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Tabs: Sign In / Create Account
+document.querySelectorAll('.sl-auth-tabs [data-tab]').forEach(tab => {
+    tab.addEventListener('click', () => {
+        const which = tab.dataset.tab;
+        document.querySelectorAll('.sl-auth-tabs [data-tab]').forEach(t => {
+            const on = t.dataset.tab === which;
+            t.classList.toggle('fill', on);
+            t.setAttribute('aria-selected', String(on));
+        });
+        document.querySelectorAll('[data-panel]').forEach(p => { p.hidden = p.dataset.panel !== which; });
+        document.getElementById('shorelineAuthTitle').textContent = which === 'login' ? 'Sign In' : 'Create Account';
+        messageEl.textContent = '';
+    });
 });
 
+async function runAuth(form, action) {
+    const button = form.querySelector('button[type=submit]');
+    messageEl.textContent = '';
+    button.disabled = true;
+    try {
+        const user = await action();
+        await renderShorelineAuth(document.getElementById('shorelineAuthArea'));
+        showSurvey(user);
+    } catch (err) {
+        messageEl.textContent = err.message;
+    } finally {
+        button.disabled = false;
+    }
+}
+
+document.getElementById('shorelineLoginForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    runAuth(e.target, () => shorelineLogin(
+        document.getElementById('loginUid').value.trim(),
+        document.getElementById('loginPassword').value,
+    ));
+});
+
+document.getElementById('shorelineSignupForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    runAuth(e.target, () => shorelineSignup({
+        name: document.getElementById('signupName').value.trim(),
+        uid: document.getElementById('signupUid').value.trim(),
+        email: document.getElementById('signupEmail').value.trim(),
+        password: document.getElementById('signupPassword').value,
+    }));
+});
+
+// Survey -> Flask (/api/shoreline/survey), then on to the chosen section.
 document.querySelectorAll('#shoreline-login-survey [data-choice]').forEach(button => {
     button.addEventListener('click', async () => {
         const statusEl = document.getElementById('shorelineSurveyStatus');
         statusEl.textContent = 'Saving...';
-
         try {
-            const response = await fetch(`${pythonURI}/api/shoreline/survey`, {
-                ...fetchOptions,
-                method: 'POST',
-                body: JSON.stringify({
-                    name: visitorName,
-                    email: visitorEmail,
-                    choice: button.dataset.choice,
-                }),
-            });
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        } catch (error) {
-            // Best-effort: still send the visitor on their way even if saving failed
-            // (expected until the backend route exists).
-            console.warn('Could not save survey choice:', error);
+            await saveSurveyChoice(button.dataset.choice);
+            statusEl.textContent = 'Saved!';
+        } catch (err) {
+            // Choice is kept in localStorage by saveSurveyChoice; don't trap the visitor here.
+            console.warn('Shoreline survey not saved on server:', err);
+            statusEl.textContent = 'Saved on this device (server unavailable).';
         }
-
         window.location.href = button.dataset.redirect;
     });
 });
+
+// Already signed in (JWT cookie still valid)? Skip the form entirely.
+(async () => {
+    const user = await getShorelineUser();
+    renderShorelineAuth(document.getElementById('shorelineAuthArea'));
+    if (user) showSurvey(user);
+})();
 </script>

@@ -120,7 +120,8 @@ show_reading_time: false
 </div>
 
 <script type="module">
-    import { login, pythonURI, javaURI, fetchOptions, GOOGLE_CLIENT_ID } from '{{site.baseurl}}/assets/js/api/config.js';
+    import { login, pythonURI, javaURI, fetchOptions, GOOGLE_CLIENT_ID, springEnabled } from '{{site.baseurl}}/assets/js/api/config.js';
+    import { SPRING_PASSWORD_RULES, meetsSpringPasswordRules, attachPasswordChecklist } from '{{site.baseurl}}/assets/js/api/passwordRules.js';
 
     let signupFormData = {};
     let verifiedSchoolEmail = null;
@@ -195,17 +196,6 @@ show_reading_time: false
         return true;
     }
 
-    // Mirrors Person.checkPassword() in Spring. Flask only needs 8 characters, so a
-    // weaker password used to create the Flask account while Spring silently refused it.
-    const SPRING_PASSWORD_RULES = 'Password needs 8+ characters with an uppercase letter, a lowercase letter, a number, and one of ` ~ ! @ # $ % ^ & * ( )';
-    function meetsSpringPasswordRules(password) {
-        return password.length >= 8
-            && /[A-Z]/.test(password)
-            && /[a-z]/.test(password)
-            && /[0-9]/.test(password)
-            && /[`~!@#$%^&*()]/.test(password);
-    }
-
     // Backend status management
     function updateBackendStatus(backend, status, message = '') {
         const element = document.getElementById(`${backend}Status`);
@@ -246,6 +236,14 @@ show_reading_time: false
 
         overallEl.classList.remove('hidden', 'success', 'partial', 'error');
 
+        // A Flask-only site (spring: false in _config.yml) creates the account in Flask alone.
+        if (!springEnabled) {
+            overallEl.classList.add(flaskSuccess ? 'success' : 'error');
+            overallEl.textContent = flaskSuccess
+                ? '🎉 Account created! You can now login.'
+                : '💥 Signup failed. Please check your information and try again.';
+            return;
+        }
         if (flaskSuccess && springSuccess) {
             overallEl.classList.add('success');
             overallEl.textContent = '🎉 Account created on both backends! You can now login.';
@@ -264,6 +262,9 @@ show_reading_time: false
             overallEl.textContent = '💥 Both backends failed. Please check your information and try again.';
         }
     }
+
+    // A Flask-only site has no Spring account, so sign-up shows only Flask's status.
+    if (!springEnabled) document.getElementById('springStatus').style.display = 'none';
 
     // A mentor has no student ID or school, so those fields are hidden and not required.
     document.getElementById('signupRole').addEventListener('change', function () {
@@ -298,8 +299,6 @@ show_reading_time: false
             school: document.getElementById("signupSchool").value,
             email: document.getElementById("signupEmail").value,
             password: document.getElementById("signupPassword").value,
-            kasmServerNeeded: false,
-            kasm_server_needed: false,
             accountType: document.getElementById("signupRole").value,
         };
 
@@ -371,6 +370,8 @@ show_reading_time: false
         const passwordField = document.getElementById('signupPassword');
         const confirmPasswordField = document.getElementById('confirmPassword');
 
+        attachPasswordChecklist(passwordField);
+
         if (passwordField && confirmPasswordField) {
             // Add debounced validation listeners
             passwordField.addEventListener('input', validatePasswordsDebounced);
@@ -387,6 +388,11 @@ show_reading_time: false
 
     // Function to handle both Python and Java login simultaneously
     window.loginBoth = function () {
+        // A Flask-only site (spring: false in _config.yml) signs in to Flask alone.
+        if (!springEnabled) {
+            window.pythonLogin(() => { window.location.href = 'https://vanshikak210.github.io/shoreline.csp/shoreline-login'; });
+            return;
+        }
         // Wrap both logins in Promises and only redirect after both finish
         let javaPromise = new Promise((resolve) => {
             window.javaLogin(resolve);
@@ -398,7 +404,7 @@ show_reading_time: false
         // login() shows the error in #message and the page stays put.
         Promise.all([javaPromise, pythonPromise]).then(([springLoggedIn]) => {
             if (springLoggedIn) {
-                window.location.href = '{{site.baseurl}}/profile';
+                window.location.href = 'https://vanshikak210.github.io/shoreline.csp/shoreline-login';
                 return;
             }
             showSpringLoginWarning();
@@ -414,7 +420,7 @@ show_reading_time: false
             + 'Your Spring password may differ from your Flask password. ',
             springLink(`${javaURI}/mvc/person/reset`, 'Reset your Spring password'),
             ' or ask your teacher, then log in again. ',
-            springLink('{{site.baseurl}}/profile', 'Continue anyway'),
+            springLink('https://vanshikak210.github.io/shoreline.csp/shoreline-login', 'Continue anyway'),
         );
     }
     function springLink(href, label) {
@@ -491,7 +497,7 @@ show_reading_time: false
         signupButton.classList.add("disabled");
         // Reset status indicators
         updateBackendStatus('flask', 'pending');
-        updateBackendStatus('spring', 'pending');
+        if (springEnabled) updateBackendStatus('spring', 'pending');
         document.getElementById('overallStatus').classList.add('hidden');
 
         const data = signupFormData && Object.keys(signupFormData).length > 0 ? signupFormData : {
@@ -501,8 +507,6 @@ show_reading_time: false
             school: document.getElementById("signupSchool").value,
             email: document.getElementById("signupEmail").value,
             password: document.getElementById("signupPassword").value,
-            kasmServerNeeded: false,
-            kasm_server_needed: false,
         };
 
         // Never log `data`: it holds the plaintext password and the Google ID token.
@@ -537,6 +541,10 @@ show_reading_time: false
             }
 
             updateBackendStatus('flask', 'success');
+            if (!springEnabled) {
+                setTimeout(updateOverallStatus, 500);
+                return;
+            }
 
             // Spring is best-effort; do not block signup success on this path.
             fetch(`${javaURI}/api/person/create`, springRequest)
@@ -560,7 +568,7 @@ show_reading_time: false
         } catch (error) {
             console.error("Flask signup error:", error);
             updateBackendStatus('flask', 'error');
-            updateBackendStatus('spring', 'error');
+            if (springEnabled) updateBackendStatus('spring', 'error');
             setTimeout(updateOverallStatus, 500);
         } finally {
             signupButton.disabled = false;
@@ -589,3 +597,5 @@ show_reading_time: false
             });
     }
 </script>
+
+<script type="module" src="{{site.baseurl}}/assets/js/api/passwordFields.js"></script>
