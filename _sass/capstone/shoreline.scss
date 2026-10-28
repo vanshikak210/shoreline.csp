@@ -182,6 +182,15 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
 
 .sl-section--teal li { @include sl-text-color(#fff); }
 
+// The teal section turns its text white, but OCS grid cells have a light
+// background, so text inside them must go back to dark to stay readable.
+.sl-section--teal .ocs__grid-cell {
+  @include sl-text-color($sl-text);
+
+  h3 { @include sl-text-color($sl-navy); }
+  p, li { @include sl-text-color($sl-text); }
+}
+
 .sl-steps strong {
   display: block;
   font-family: $sl-heading-font;
