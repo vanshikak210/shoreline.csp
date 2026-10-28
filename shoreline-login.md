@@ -87,7 +87,7 @@ custom_header: true
 
 <script type="module">
 import {
-    getShorelineUser, shorelineLogin, shorelineSignup, saveSurveyChoice, renderShorelineAuth
+    getShorelineUser, shorelineLogin, shorelineSignup, saveSurveyChoice, renderShorelineAuth, withSlowNotice
 } from '{{ site.baseurl }}/assets/js/shoreline/auth.js';
 
 const loginSection = document.getElementById('shoreline-login-form');
@@ -121,7 +121,10 @@ async function runAuth(form, action) {
     messageEl.textContent = '';
     button.disabled = true;
     try {
-        const user = await action();
+        const user = await withSlowNotice(action(), () => {
+            messageEl.textContent = 'Waking up the server, this can take up to a minute the first time...';
+        });
+        messageEl.textContent = '';
         await renderShorelineAuth(document.getElementById('shorelineAuthArea'));
         showSurvey(user);
     } catch (err) {

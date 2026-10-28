@@ -19,16 +19,26 @@ async function readJson(response) {
     try { return raw ? JSON.parse(raw) : {}; } catch (_) { return { message: raw }; }
 }
 
+// One /api/id request per page load: the header and the login page both ask for the
+// user, so share a single in-flight promise instead of hitting the backend twice.
+let currentUserPromise = null;
+
+function rememberUser(user) {
+    currentUserPromise = Promise.resolve(user);
+    return user;
+}
+
 /** Current user from /api/id, or null when there is no valid session. */
-export async function getShorelineUser() {
-    try {
-        const res = await fetch(`${pythonURI}/api/id`, fetchOptions);
-        if (!res.ok) return null;
-        return await res.json();
-    } catch (err) {
-        console.warn('Shoreline: could not reach backend for /api/id', err);
-        return null;
+export function getShorelineUser() {
+    if (!currentUserPromise) {
+        currentUserPromise = fetch(`${pythonURI}/api/id`, fetchOptions)
+            .then(res => (res.ok ? res.json() : null))
+            .catch(err => {
+                console.warn('Shoreline: could not reach backend for /api/id', err);
+                return null;
+            });
     }
+    return currentUserPromise;
 }
 
 /** POST /api/authenticate. Resolves to the user on success, throws with a readable message otherwise. */
@@ -43,9 +53,9 @@ export async function shorelineLogin(uid, password) {
         const data = await readJson(res);
         throw new Error(data.message || (res.status === 401 ? 'Wrong username or password.' : `Login failed (${res.status})`));
     }
-    const user = await getShorelineUser();
-    if (!user) throw new Error('Logged in, but the session cookie was not set. Check CORS / cookie settings on the Flask server.');
-    return user;
+    // /api/authenticate already returns the user, so skip a second /api/id round trip.
+    const data = await readJson(res);
+    return rememberUser(data.user || { uid, name: uid });
 }
 
 /**
@@ -76,6 +86,7 @@ export async function shorelineLogout() {
         console.warn('Shoreline: logout request failed', err);
     }
     localStorage.removeItem(SURVEY_KEY);
+    rememberUser(null);
 }
 
 /**
@@ -99,6 +110,20 @@ export async function saveSurveyChoice(choice) {
 
 export function getSavedSurveyChoice() {
     try { return JSON.parse(localStorage.getItem(SURVEY_KEY) || 'null'); } catch (_) { return null; }
+}
+
+/**
+ * Run a backend call, and if it takes longer than `afterMs` call `onSlow()` once.
+ * Render's free plan sleeps when idle and takes up to a minute to wake, so tell the
+ * user why they're waiting instead of leaving a frozen button.
+ */
+export async function withSlowNotice(promise, onSlow, afterMs = 3000) {
+    const timer = setTimeout(onSlow, afterMs);
+    try {
+        return await promise;
+    } finally {
+        clearTimeout(timer);
+    }
 }
 
 function initials(name = '') {
