@@ -167,6 +167,26 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
   }
 }
 
+// ── Section pages (_includes/shoreline/page.html) ──
+.sl-hero--short { padding: 64px 0; }
+
+.sl-list,
+.sl-steps {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: left;
+  font-size: 1.05rem;
+
+  li { margin: 0.5em 0; }
+}
+
+.sl-section--teal li { @include sl-text-color(#fff); }
+
+.sl-steps strong {
+  display: block;
+  font-family: $sl-heading-font;
+}
+
 .sl-note {
   @include sl-text-color(#6b7280);
   font-size: 0.9rem;

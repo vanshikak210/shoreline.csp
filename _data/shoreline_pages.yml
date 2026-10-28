@@ -1,0 +1,133 @@
+# Content for the Shoreline section pages (Our Impact, Get Help, Volunteer, Donate).
+# Rendered by _includes/shoreline/page.html; each page file under shoreline/ picks one key.
+# Edit text here, not in HTML. Program names, address and phone come from shorelinecs.org;
+# impact numbers are SAMPLE placeholders until Shoreline shares real data.
+#
+# Section types:
+#   cards  - grid of cards: title, text, optional button {label, url, style}
+#   stats  - big-number tiles: value, label
+#   list   - simple bullet list: items
+#   steps  - numbered steps: title, text
+
+contact:
+  address: "1004 Chalcedony St, San Diego, CA 92109"
+  phone: "(858) 900-7024"
+  email: "info@shorelinecs.org"
+  official_site: "https://shorelinecs.org"
+
+impact:
+  title: "Our Impact"
+  lead: "Neighbors helping neighbors across Pacific Beach, Mission Beach and La Jolla."
+  note: "Sample numbers for the redesign. Real figures will come from Shoreline's outreach data."
+  sections:
+    - heading: "This Year at a Glance"
+      type: stats
+      tone: teal
+      items:
+        - { value: "1,200+", label: "Outreach contacts" }
+        - { value: "350", label: "People connected to services" }
+        - { value: "85", label: "Respite hotel nights" }
+        - { value: "4,000", label: "Volunteer hours" }
+    - heading: "Programs Making It Happen"
+      type: cards
+      items:
+        - title: "The Compass Station"
+          text: "A drop-in resource center where unhoused neighbors can get services and take the first step off the street."
+        - title: "Volunteer Community Outreach"
+          text: "Trained volunteers meet people where they are, build trust, and connect them to resources."
+        - title: "Medical Respite Hotel Program"
+          text: "Medically fragile people leaving a hospital stay get a safe hotel room to recover."
+        - title: "Community Care Crew"
+          text: "Paid transitional work, case management, career counseling and temporary workforce housing."
+    - heading: "Stories from the Shoreline"
+      type: cards
+      tone: green
+      items:
+        - title: "From the beach to a bed"
+          text: "Sample story: after months of outreach visits near Garnet Avenue, a neighbor moved into transitional housing."
+        - title: "Back to work"
+          text: "Sample story: a Community Care Crew member used his paychecks and a case manager's help to rent his first apartment in years."
+
+help:
+  title: "Get Help"
+  lead: "If you're unsheltered or about to lose housing in the Central Beach Area, we can help you find a next step."
+  note: "In danger right now? Call 911. For 24/7 shelter and food referrals anywhere in the county, call 2-1-1."
+  sections:
+    - heading: "Where to Start"
+      type: cards
+      items:
+        - title: "Visit The Compass Station"
+          text: "Drop in to talk with our team about shelter, IDs, food, health care and next steps."
+          button: { label: "Get Directions", url: "https://maps.google.com/?q=1004+Chalcedony+St+San+Diego+CA+92109", style: "accent fill" }
+        - title: "Call Us"
+          text: "Reach the Shoreline team at (858) 900-7024 to ask about services or outreach in your area."
+          button: { label: "Call (858) 900-7024", url: "tel:+18589007024", style: "alert-red fill" }
+        - title: "Find Shelter Tonight"
+          text: "2-1-1 San Diego is free and open 24/7. They can check shelter beds county-wide."
+          button: { label: "Call 2-1-1", url: "tel:211", style: "accent" }
+    - heading: "What We Can Help With"
+      type: list
+      tone: teal
+      items:
+        - "Connecting to shelter and housing programs"
+        - "Replacing IDs and important documents"
+        - "Medical respite after a hospital stay"
+        - "Paid transitional jobs through the Community Care Crew"
+        - "Food, hygiene kits, socks and warm clothing"
+
+volunteer:
+  title: "Volunteer"
+  lead: "Join the Volunteer Community Outreach team and help your neighbors find their way home."
+  note: "Shift sign-up is coming soon. For now, contact Shoreline to get started."
+  sections:
+    - heading: "How It Works"
+      type: steps
+      items:
+        - { title: "Sign up", text: "Create an account on this site and choose \"I Want to Volunteer\"." }
+        - { title: "Get trained", text: "Attend a short orientation on outreach, safety and local resources." }
+        - { title: "Pick a shift", text: "Join a team walking Pacific Beach, Mission Beach or La Jolla." }
+        - { title: "Make a difference", text: "Build trust, hand out supplies and connect neighbors to services." }
+    - heading: "Ways to Help"
+      type: cards
+      tone: green
+      items:
+        - title: "Street Outreach"
+          text: "Walk with a trained team to check in on unsheltered neighbors."
+        - title: "Compass Station Support"
+          text: "Welcome visitors, sort donations and help keep the center running."
+        - title: "Supply Drives"
+          text: "Collect socks, hygiene items and snacks at your school, work or church."
+          button: { label: "Sign Up", url: "/shoreline-login", style: "accent fill" }
+
+donate:
+  title: "Donate"
+  lead: "Every gift helps a neighbor in the Central Beach Area take a step toward home."
+  note: "Donations on this redesign are not processed. To give for real, use Shoreline's official Ways to Give page."
+  sections:
+    - heading: "What Your Gift Does"
+      type: stats
+      tone: teal
+      items:
+        - { value: "$25", label: "Hygiene kit and socks" }
+        - { value: "$50", label: "A meal and outreach supplies" }
+        - { value: "$100", label: "A night in a medical respite room" }
+        - { value: "$250", label: "A week of paid Care Crew work" }
+    - heading: "Ways to Give"
+      type: cards
+      items:
+        - title: "Give Money"
+          text: "One-time or monthly gifts fund outreach, respite rooms and the Care Crew."
+          button: { label: "Give on shorelinecs.org", url: "https://shorelinecs.org/donate/", style: "accent fill" }
+        - title: "Donate Items"
+          text: "Drop off new socks, underwear, hygiene items and snacks at The Compass Station."
+        - title: "Socktober"
+          text: "Socks are the most-requested item on the street. Run a sock drive this October!"
+    - heading: "Most-Needed Items"
+      type: list
+      tone: green
+      items:
+        - "New socks and underwear"
+        - "Travel-size toiletries and sunscreen"
+        - "Reusable water bottles"
+        - "Granola bars and other non-perishable snacks"
+        - "Backpacks and rain ponchos"

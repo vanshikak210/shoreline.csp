@@ -1,0 +1,31 @@
+{%- comment -%}
+  Shared Shoreline header: logo, section nav, login/avatar slot.
+  Used by index.md and the section pages in shoreline/. Nav entries come from
+  _data/shoreline_pages.yml order below so adding a page is one line here.
+{%- endcomment -%}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap">
+<header class="sl-header">
+    <div class="sl-container">
+        <a class="sl-logo" href="{{ '/' | relative_url }}">
+            <span class="sl-logo__sun" aria-hidden="true"></span>
+            <span>
+                <span class="sl-logo__name">Shoreline</span><br>
+                <span class="sl-logo__tagline">Community Services</span>
+            </span>
+        </a>
+        <nav class="ocs__links sl-nav" aria-label="Shoreline sections">
+            <a href="{{ '/impact' | relative_url }}">Our Impact</a>
+            <a href="{{ '/get-help' | relative_url }}">Get Help</a>
+            <a href="{{ '/volunteer' | relative_url }}">Volunteer</a>
+            <a href="{{ '/donate' | relative_url }}">Donate</a>
+        </nav>
+        <div class="ocs__links">
+            <span id="shorelineAuthArea"><a class="ocs__btn medium accent" href="{{ '/shoreline-login' | relative_url }}">Login</a></span>
+            <a class="ocs__btn medium accent fill" href="{{ '/donate' | relative_url }}">Donate Now</a>
+        </div>
+    </div>
+</header>
+<script type="module">
+import { renderShorelineAuth } from '{{ site.baseurl }}/assets/js/shoreline/auth.js';
+renderShorelineAuth(document.getElementById('shorelineAuthArea'));
+</script>

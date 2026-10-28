@@ -87,7 +87,7 @@ custom_header: true
 
 <script type="module">
 import {
-    getShorelineUser, shorelineLogin, shorelineSignup, saveSurveyChoice, renderShorelineAuth, withSlowNotice, getSurveyChoice
+    getShorelineUser, shorelineLogin, shorelineSignup, saveSurveyChoice, renderShorelineAuth, withSlowNotice
 } from '{{ site.baseurl }}/assets/js/shoreline/auth.js';
 
 const loginSection = document.getElementById('shoreline-login-form');
@@ -101,17 +101,10 @@ function showSurvey(user) {
     surveySection.scrollIntoView({ behavior: 'smooth' });
 }
 
-// The survey is asked once per account. After that, logging in goes straight home;
+// The survey is only for new accounts: Create Account -> survey, Sign In -> home.
 // "Update my choice" in the profile menu opens this page with ?update=1 to change it.
 const wantsUpdate = new URLSearchParams(location.search).has('update');
-
-async function afterLogin(user) {
-    if (!wantsUpdate && await getSurveyChoice()) {
-        window.location.href = '{{ '/' | relative_url }}';
-        return;
-    }
-    showSurvey(user);
-}
+const HOME = '{{ '/' | relative_url }}';
 
 // Tabs: Sign In / Create Account
 document.querySelectorAll('.sl-auth-tabs [data-tab]').forEach(tab => {
@@ -128,7 +121,7 @@ document.querySelectorAll('.sl-auth-tabs [data-tab]').forEach(tab => {
     });
 });
 
-async function runAuth(form, action) {
+async function runAuth(form, action, showSurveyAfter) {
     const button = form.querySelector('button[type=submit]');
     messageEl.textContent = '';
     button.disabled = true;
@@ -137,8 +130,12 @@ async function runAuth(form, action) {
             messageEl.textContent = 'Waking up the server, this can take up to a minute the first time...';
         });
         messageEl.textContent = '';
+        if (!showSurveyAfter) {
+            window.location.href = HOME;
+            return;
+        }
         await renderShorelineAuth(document.getElementById('shorelineAuthArea'));
-        await afterLogin(user);
+        showSurvey(user);
     } catch (err) {
         messageEl.textContent = err.message;
     } finally {
@@ -151,7 +148,7 @@ document.getElementById('shorelineLoginForm').addEventListener('submit', (e) => 
     runAuth(e.target, () => shorelineLogin(
         document.getElementById('loginUid').value.trim(),
         document.getElementById('loginPassword').value,
-    ));
+    ), false);
 });
 
 document.getElementById('shorelineSignupForm').addEventListener('submit', (e) => {
@@ -161,7 +158,7 @@ document.getElementById('shorelineSignupForm').addEventListener('submit', (e) =>
         uid: document.getElementById('signupUid').value.trim(),
         email: document.getElementById('signupEmail').value.trim(),
         password: document.getElementById('signupPassword').value,
-    }));
+    }), true);
 });
 
 // Survey -> Flask (/api/shoreline/survey), then on to the chosen section.
@@ -185,6 +182,8 @@ document.querySelectorAll('#shoreline-login-survey [data-choice]').forEach(butto
 (async () => {
     const user = await getShorelineUser();
     renderShorelineAuth(document.getElementById('shorelineAuthArea'));
-    if (user) await afterLogin(user);
+    if (!user) return;
+    if (wantsUpdate) showSurvey(user);
+    else window.location.href = HOME;
 })();
 </script>

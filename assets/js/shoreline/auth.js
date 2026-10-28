@@ -108,22 +108,6 @@ export async function saveSurveyChoice(choice) {
     return readJson(res);
 }
 
-/**
- * The logged-in user's saved survey choice from Flask, or null if they haven't answered.
- * Server is the source of truth (localStorage is per-device and per-browser).
- */
-export async function getSurveyChoice() {
-    try {
-        const res = await fetch(`${pythonURI}/api/shoreline/survey`, fetchOptions);
-        if (!res.ok) return null;  // 404 = no answer yet, 401 = not logged in
-        const data = await res.json();
-        return data.choice || null;
-    } catch (err) {
-        console.warn('Shoreline: could not load survey choice', err);
-        return null;
-    }
-}
-
 export function getSavedSurveyChoice() {
     try { return JSON.parse(localStorage.getItem(SURVEY_KEY) || 'null'); } catch (_) { return null; }
 }

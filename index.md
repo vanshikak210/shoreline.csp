@@ -6,40 +6,18 @@ hide: true
 custom_header: true
 ---
 <!-- markdownlint-disable MD033 -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap">
-
 <div class="shoreline-site">
 
-<header class="sl-header">
-    <div class="sl-container">
-        <a class="sl-logo" href="#top">
-            <span class="sl-logo__sun" aria-hidden="true"></span>
-            <span>
-                <span class="sl-logo__name">Shoreline</span><br>
-                <span class="sl-logo__tagline">Community Services</span>
-            </span>
-        </a>
-        <nav class="ocs__links sl-nav" aria-label="Shoreline sections">
-            <a href="#impact">Our Impact</a>
-            <a href="#need-help">Get Help</a>
-            <a href="#volunteer">Volunteer</a>
-            <a href="#donate">Donate</a>
-        </nav>
-        <div class="ocs__links">
-            <span id="shorelineAuthArea"><a class="ocs__btn medium accent" href="{{ '/shoreline-login' | relative_url }}">Login</a></span>
-            <a class="ocs__btn medium accent fill" href="#donate">Donate Now</a>
-        </div>
-    </div>
-</header>
+{% include shoreline/header.html %}
 
 <section class="sl-hero" id="top">
     <div class="sl-container">
         <h1>Everyone deserves a place to live.</h1>
         <p>We help unsheltered individuals and families in Pacific Beach, Mission Beach, and La Jolla find shelter, food, and support.</p>
         <div class="ocs__links">
-            <a class="ocs__btn large alert-red fill" href="#need-help">I Need Help</a>
-            <a class="ocs__btn large accent fill" href="#volunteer">Volunteer</a>
-            <a class="ocs__btn large accent" href="#donate">Donate</a>
+            <a class="ocs__btn large alert-red fill" href="{{ '/get-help' | relative_url }}">I Need Help</a>
+            <a class="ocs__btn large accent fill" href="{{ '/volunteer' | relative_url }}">Volunteer</a>
+            <a class="ocs__btn large accent" href="{{ '/donate' | relative_url }}">Donate</a>
         </div>
     </div>
 </section>
@@ -75,7 +53,7 @@ custom_header: true
                 Graph of people helped over the past year: coming soon
             </div>
         </div>
-        <p class="sl-note">Real numbers coming once we have Shoreline's data.</p>
+        <p class="sl-note">Real numbers coming once we have Shoreline's data. <a href="{{ '/impact' | relative_url }}">See our full impact</a></p>
     </div>
 </section>
 
@@ -88,17 +66,17 @@ custom_header: true
             <div class="ocs__grid-cell" id="need-help">
                 <h3>Need Help?</h3>
                 <p>Find the nearest shelter, get directions, and reach our outreach team.</p>
-                <a class="ocs__btn medium alert-red fill" href="#need-help">Find Shelter</a>
+                <a class="ocs__btn medium alert-red fill" href="{{ '/get-help' | relative_url }}">Find Shelter</a>
             </div>
             <div class="ocs__grid-cell" id="volunteer">
                 <h3>Volunteer</h3>
                 <p>See where help is needed most and pick a shift that works for you.</p>
-                <a class="ocs__btn medium accent fill" href="#volunteer">Pick a Shift</a>
+                <a class="ocs__btn medium accent fill" href="{{ '/volunteer' | relative_url }}">Pick a Shift</a>
             </div>
             <div class="ocs__grid-cell" id="donate">
                 <h3>Donate</h3>
                 <p>Give money and see what it does, like <em>$50 = 1 meal + supplies</em>, or donate the items local shelters need right now.</p>
-                <a class="ocs__btn medium accent fill" href="#donate">Give Today</a>
+                <a class="ocs__btn medium accent fill" href="{{ '/donate' | relative_url }}">Give Today</a>
             </div>
         </div>
     </div>
@@ -120,17 +98,8 @@ custom_header: true
     </div>
 </section>
 
-<footer class="sl-footer">
-    <div class="sl-container">
-        <p>A student redesign project for <a href="https://shorelinecs.org">Shoreline Community Services</a>. This is not the official Shoreline website.</p>
-        <p><a href="{{ '/capstone/shoreline-volunteer/' | relative_url }}">About this project</a></p>
-    </div>
-</footer>
+{% include shoreline/footer.html %}
 
 </div>
 <!-- markdownlint-enable MD033 -->
 
-<script type="module">
-import { renderShorelineAuth } from '{{ site.baseurl }}/assets/js/shoreline/auth.js';
-renderShorelineAuth(document.getElementById('shorelineAuthArea'));
-</script>

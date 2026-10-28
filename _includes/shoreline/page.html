@@ -1,0 +1,75 @@
+{%- comment -%}
+  Renders one Shoreline section page from _data/shoreline_pages.yml.
+  Usage: {% include shoreline/page.html key="impact" %}
+  Section types: cards, stats, list, steps (see the data file header).
+{%- endcomment -%}
+{%- assign page_data = site.data.shoreline_pages[include.key] -%}
+<!-- markdownlint-disable MD033 -->
+<div class="shoreline-site">
+
+{% include shoreline/header.html %}
+
+<section class="sl-hero sl-hero--short">
+    <div class="sl-container">
+        <h1>{{ page_data.title }}</h1>
+        <p>{{ page_data.lead }}</p>
+    </div>
+</section>
+
+{%- for section in page_data.sections %}
+<section class="sl-section{% if section.tone %} sl-section--{{ section.tone }}{% endif %}">
+    <div class="sl-container">
+        <h2>{{ section.heading }}</h2>
+
+        {%- if section.type == "stats" %}
+        <div class="ocs__grid ocs__grid--standard cols-4">
+            {%- for item in section.items %}
+            <div class="ocs__grid-cell ocs__grid-cell--accent"><h3>{{ item.value }}</h3>{{ item.label }}</div>
+            {%- endfor %}
+        </div>
+
+        {%- elsif section.type == "cards" %}
+        <div class="ocs__grid ocs__grid--card cols-{% if section.items.size > 3 %}2{% else %}{{ section.items.size }}{% endif %}">
+            {%- for item in section.items %}
+            <div class="ocs__grid-cell">
+                <h3>{{ item.title }}</h3>
+                <p>{{ item.text }}</p>
+                {%- if item.button %}
+                {%- assign url = item.button.url -%}
+                {%- if url contains "://" or url contains "tel:" or url contains "mailto:" -%}{%- else -%}{%- assign url = url | relative_url -%}{%- endif %}
+                <a class="ocs__btn medium {{ item.button.style }}" href="{{ url }}">{{ item.button.label }}</a>
+                {%- endif %}
+            </div>
+            {%- endfor %}
+        </div>
+
+        {%- elsif section.type == "steps" %}
+        <ol class="sl-steps">
+            {%- for item in section.items %}
+            <li><strong>{{ item.title }}</strong> {{ item.text }}</li>
+            {%- endfor %}
+        </ol>
+
+        {%- elsif section.type == "list" %}
+        <ul class="sl-list">
+            {%- for item in section.items %}
+            <li>{{ item }}</li>
+            {%- endfor %}
+        </ul>
+        {%- endif %}
+    </div>
+</section>
+{%- endfor %}
+
+{%- if page_data.note %}
+<section class="sl-section">
+    <div class="sl-container">
+        <p class="sl-note">{{ page_data.note }}</p>
+    </div>
+</section>
+{%- endif %}
+
+{% include shoreline/footer.html %}
+
+</div>
+<!-- markdownlint-enable MD033 -->
