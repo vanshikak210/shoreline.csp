@@ -1,6 +1,6 @@
 ---
 ---
-// Shoreline auth helpers, built on the OCS Flask backend (pythonURI in api/config.js).
+// Shoreline auth helpers on an OCS-style Flask backend (see apiURI below).
 //
 // Session = the JWT cookie Flask sets on POST /api/authenticate. It is httpOnly and
 // sent automatically (fetchOptions has credentials: 'include'), so "staying logged in"
@@ -13,6 +13,19 @@
 import { baseurl, pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
 
 const SURVEY_KEY = 'shoreline.survey';
+
+// Which Flask backend to use. On OCS domains (and localhost) it's the class backend
+// from config.js, so people sign in with their Open Coding Society account. The team's
+// own github.io site can't use that backend (OCS only accepts opencodingsociety.com
+// origins), so there it uses the Shoreline backend on Render.
+const SHORELINE_BACKENDS = {
+    'vanshikak210.github.io': 'https://shoreline-flask.onrender.com',
+};
+export const apiURI = SHORELINE_BACKENDS[location.hostname] || pythonURI;
+
+// The OCS class backend doesn't have the /api/shoreline routes (signup, survey) yet,
+// so on OCS the page uses OCS signup and keeps the survey answer on the device.
+export const usesOcsBackend = apiURI.includes('opencodingsociety.com');
 
 async function readJson(response) {
     const raw = await response.text();
@@ -31,7 +44,7 @@ function rememberUser(user) {
 /** Current user from /api/id, or null when there is no valid session. */
 export function getShorelineUser() {
     if (!currentUserPromise) {
-        currentUserPromise = fetch(`${pythonURI}/api/id`, fetchOptions)
+        currentUserPromise = fetch(`${apiURI}/api/id`, fetchOptions)
             .then(res => (res.ok ? res.json() : null))
             .catch(err => {
                 console.warn('Shoreline: could not reach backend for /api/id', err);
@@ -43,7 +56,7 @@ export function getShorelineUser() {
 
 /** POST /api/authenticate. Resolves to the user on success, throws with a readable message otherwise. */
 export async function shorelineLogin(uid, password) {
-    const res = await fetch(`${pythonURI}/api/authenticate`, {
+    const res = await fetch(`${apiURI}/api/authenticate`, {
         ...fetchOptions,
         method: 'POST',
         cache: 'no-cache',
@@ -64,7 +77,7 @@ export async function shorelineLogin(uid, password) {
  * until a teacher approves them (see docs/shoreline-backend/shoreline.py).
  */
 export async function shorelineSignup({ name, uid, email, password }) {
-    const res = await fetch(`${pythonURI}/api/shoreline/signup`, {
+    const res = await fetch(`${apiURI}/api/shoreline/signup`, {
         ...fetchOptions,
         method: 'POST',
         body: JSON.stringify({ name, uid, email, password }),
@@ -81,7 +94,7 @@ export async function shorelineSignup({ name, uid, email, password }) {
 /** DELETE /api/authenticate clears the JWT cookie. */
 export async function shorelineLogout() {
     try {
-        await fetch(`${pythonURI}/api/authenticate`, { ...fetchOptions, method: 'DELETE' });
+        await fetch(`${apiURI}/api/authenticate`, { ...fetchOptions, method: 'DELETE' });
     } catch (err) {
         console.warn('Shoreline: logout request failed', err);
     }
@@ -96,7 +109,7 @@ export async function shorelineLogout() {
  */
 export async function saveSurveyChoice(choice) {
     localStorage.setItem(SURVEY_KEY, JSON.stringify({ choice, at: Date.now() }));
-    const res = await fetch(`${pythonURI}/api/shoreline/survey`, {
+    const res = await fetch(`${apiURI}/api/shoreline/survey`, {
         ...fetchOptions,
         method: 'POST',
         body: JSON.stringify({ choice }),
@@ -143,19 +156,22 @@ export async function renderShorelineAuth(el) {
         return null;
     }
 
+    // OCS avatar element (initials in an <abbr>, see _sass/open-coding/elements/avatars),
+    // or the profile picture when the user has one.
+    const name = user.name || user.uid;
     const avatar = user.pfp
-        ? `<img class="sl-avatar__img" src="${user.pfp.startsWith('data:') || user.pfp.startsWith('http') ? user.pfp : `${pythonURI}/${user.pfp}`}" alt="">`
-        : `<span class="sl-avatar__initials">${initials(user.name)}</span>`;
+        ? `<img class="sl-avatar__img" src="${user.pfp.startsWith('data:') || user.pfp.startsWith('http') ? user.pfp : `${apiURI}/${user.pfp}`}" alt="">`
+        : `<abbr class="ocs__avatar" title="${name}">${initials(user.name)}</abbr>`;
 
     el.innerHTML = `
         <div class="sl-avatar">
-            <button type="button" class="sl-avatar__btn" aria-haspopup="true" aria-expanded="false" title="${user.name || user.uid}">
+            <button type="button" class="sl-avatar__btn" aria-haspopup="true" aria-expanded="false" aria-label="Account menu for ${name}">
                 ${avatar}
             </button>
-            <div class="sl-avatar__menu" hidden>
-                <div class="sl-avatar__name">${user.name || user.uid}</div>
-                <a href="${baseurl}/profile">Profile</a>
-                <button type="button" class="sl-avatar__logout">Log out</button>
+            <div class="sl-avatar__menu ocs__links" hidden>
+                <strong class="sl-avatar__name">${name}</strong>
+                <a class="ocs__btn small accent" href="${baseurl}/profile">Profile</a>
+                <button type="button" class="ocs__btn small alert-red sl-avatar__logout">Log out</button>
             </div>
         </div>`;
 
@@ -171,7 +187,7 @@ export async function renderShorelineAuth(el) {
     });
     el.querySelector('.sl-avatar__logout').addEventListener('click', async () => {
         await shorelineLogout();
-        window.location.href = `${baseurl}/`;
+        window.location.href = `${baseurl}/shoreline/`;
     });
 
     return user;

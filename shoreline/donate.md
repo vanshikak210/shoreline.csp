@@ -1,7 +1,7 @@
 ---
 layout: opencs
 title: Donate | Shoreline Community Services
-permalink: /donate
+permalink: /shoreline/donate
 search_exclude: true
 show_reading_time: false
 custom_header: true

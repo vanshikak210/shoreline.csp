@@ -1,7 +1,7 @@
 ---
 layout: opencs
 title: Volunteer | Shoreline Community Services
-permalink: /volunteer
+permalink: /shoreline/volunteer
 search_exclude: true
 show_reading_time: false
 custom_header: true

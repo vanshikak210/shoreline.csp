@@ -13,7 +13,7 @@ custom_header: true
 
 <header class="sl-header">
     <div class="sl-container">
-        <a class="sl-logo" href="{{ '/' | relative_url }}">
+        <a class="sl-logo" href="{{ '/shoreline/' | relative_url }}">
             <span class="sl-logo__sun" aria-hidden="true"></span>
             <span>
                 <span class="sl-logo__name">Shoreline</span><br>
@@ -50,6 +50,11 @@ custom_header: true
                     <p><button type="submit" class="ocs__btn medium accent fill">Create Account</button></p>
                 </form>
 
+                <div id="shorelineOcsSignup" data-panel="signup" hidden>
+                    <p>Shoreline uses your Open Coding Society account. Don't have one yet?</p>
+                    <p><a class="ocs__btn medium accent fill" href="{{ '/login' | relative_url }}">Create an Open Coding Society Account</a></p>
+                </div>
+
                 <p id="shorelineAuthMessage" class="sl-note" role="alert"></p>
             </div>
         </div>
@@ -65,17 +70,17 @@ custom_header: true
             <div class="ocs__grid-cell">
                 <h3>Donate</h3>
                 <p>Give money or the items local shelters need right now.</p>
-                <button type="button" class="ocs__btn medium accent fill" data-choice="donate" data-redirect="{{ '/' | relative_url }}#donate">I Want to Donate</button>
+                <button type="button" class="ocs__btn medium accent fill" data-choice="donate" data-redirect="{{ '/shoreline/donate' | relative_url }}">I Want to Donate</button>
             </div>
             <div class="ocs__grid-cell">
                 <h3>Volunteer</h3>
                 <p>See where help is needed most and pick a shift that works for you.</p>
-                <button type="button" class="ocs__btn medium accent fill" data-choice="volunteer" data-redirect="{{ '/' | relative_url }}#volunteer">I Want to Volunteer</button>
+                <button type="button" class="ocs__btn medium accent fill" data-choice="volunteer" data-redirect="{{ '/shoreline/volunteer' | relative_url }}">I Want to Volunteer</button>
             </div>
             <div class="ocs__grid-cell">
                 <h3>None</h3>
                 <p>Not ready to commit to either just yet? That's okay too.</p>
-                <button type="button" class="ocs__btn medium accent" data-choice="none" data-redirect="{{ '/' | relative_url }}">Maybe Later</button>
+                <button type="button" class="ocs__btn medium accent" data-choice="none" data-redirect="{{ '/shoreline/' | relative_url }}">Maybe Later</button>
             </div>
         </div>
         <p id="shorelineSurveyStatus" class="sl-note"></p>
@@ -87,7 +92,8 @@ custom_header: true
 
 <script type="module">
 import {
-    getShorelineUser, shorelineLogin, shorelineSignup, saveSurveyChoice, renderShorelineAuth, withSlowNotice
+    getShorelineUser, shorelineLogin, shorelineSignup, saveSurveyChoice, renderShorelineAuth, withSlowNotice,
+    usesOcsBackend
 } from '{{ site.baseurl }}/assets/js/shoreline/auth.js';
 
 const loginSection = document.getElementById('shoreline-login-form');
@@ -102,7 +108,16 @@ function showSurvey(user) {
 }
 
 // The survey is only for new accounts: Create Account -> survey, Sign In -> home.
-const HOME = '{{ '/' | relative_url }}';
+const HOME = '{{ '/shoreline/' | relative_url }}';
+
+// On the OCS class backend, sign in with an Open Coding Society account and send new
+// people to OCS signup (the OCS backend has no Shoreline signup route).
+if (usesOcsBackend) {
+    document.getElementById('loginUid').placeholder = 'Open Coding Society username';
+    document.getElementById('shorelineSignupForm').remove();
+} else {
+    document.getElementById('shorelineOcsSignup').remove();
+}
 
 // Tabs: Sign In / Create Account
 document.querySelectorAll('.sl-auth-tabs [data-tab]').forEach(tab => {

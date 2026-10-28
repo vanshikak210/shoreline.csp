@@ -205,61 +205,41 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
 // ── Auth: login tabs + signed-in avatar menu (assets/js/shoreline/auth.js) ──
 .sl-auth-tabs { margin-bottom: 16px; }
 
+// Positions the OCS avatar + OCS buttons as a header dropdown; the avatar itself and
+// the menu buttons are OCS components (ocs__avatar, ocs__btn).
 .sl-avatar {
   position: relative;
 
   &__btn {
-    width: 40px;
-    height: 40px;
     padding: 0;
-    border: 2px solid $sl-teal;
+    border: 0;
+    background: none;
     border-radius: 50%;
-    background: $sl-green;
     cursor: pointer;
-    overflow: hidden;
-    display: grid;
-    place-items: center;
+
+    .ocs__avatar { width: 40px; height: 40px; font-size: 0.95rem; }
   }
-  &__img { width: 100%; height: 100%; object-fit: cover; }
-  &__initials {
-    font-family: $sl-heading-font;
-    font-weight: 700;
-    font-size: 0.95rem;
-    @include sl-text-color($sl-navy);
-  }
+  &__img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block; }
   &__menu {
     position: absolute;
     right: 0;
     top: calc(100% + 8px);
     min-width: 180px;
+    flex-direction: column;
+    align-items: stretch;
     background: #fff;
     border: 1px solid #e5e7eb;
     border-radius: 10px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    padding: 6px 0;
+    padding: 10px;
     z-index: 20;
 
-    a, button {
-      display: block;
-      width: 100%;
-      text-align: left;
-      padding: 8px 14px;
-      font: inherit;
-      background: none;
-      border: 0;
-      cursor: pointer;
-      @include sl-text-color($sl-text);
-      --pref-accent-color: #{$sl-text};
-      text-decoration: none;
-      &:hover { background: #f3f8fa; }
-    }
+    display: flex;
+    // .ocs__links sets display:flex, which would beat the hidden attribute.
+    &[hidden] { display: none; }
   }
   &__name {
-    padding: 8px 14px 6px;
     font-family: $sl-heading-font;
-    font-weight: 600;
-    border-bottom: 1px solid #eee;
-    margin-bottom: 4px;
     @include sl-text-color($sl-navy);
   }
 }

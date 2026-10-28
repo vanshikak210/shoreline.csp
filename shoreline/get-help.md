@@ -1,7 +1,7 @@
 ---
 layout: opencs
 title: Get Help | Shoreline Community Services
-permalink: /get-help
+permalink: /shoreline/get-help
 search_exclude: true
 show_reading_time: false
 custom_header: true
