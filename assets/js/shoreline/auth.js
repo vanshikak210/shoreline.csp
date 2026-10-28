@@ -155,7 +155,6 @@ export async function renderShorelineAuth(el) {
             <div class="sl-avatar__menu" hidden>
                 <div class="sl-avatar__name">${user.name || user.uid}</div>
                 <a href="${baseurl}/profile">Profile</a>
-                <a href="${baseurl}/shoreline-login?update=1">Update my choice</a>
                 <button type="button" class="sl-avatar__logout">Log out</button>
             </div>
         </div>`;

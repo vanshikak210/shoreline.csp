@@ -102,8 +102,6 @@ function showSurvey(user) {
 }
 
 // The survey is only for new accounts: Create Account -> survey, Sign In -> home.
-// "Update my choice" in the profile menu opens this page with ?update=1 to change it.
-const wantsUpdate = new URLSearchParams(location.search).has('update');
 const HOME = '{{ '/' | relative_url }}';
 
 // Tabs: Sign In / Create Account
@@ -182,8 +180,6 @@ document.querySelectorAll('#shoreline-login-survey [data-choice]').forEach(butto
 (async () => {
     const user = await getShorelineUser();
     renderShorelineAuth(document.getElementById('shorelineAuthArea'));
-    if (!user) return;
-    if (wantsUpdate) showSurvey(user);
-    else window.location.href = HOME;
+    if (user) window.location.href = HOME;
 })();
 </script>
