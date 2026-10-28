@@ -87,7 +87,7 @@ custom_header: true
 
 <script type="module">
 import {
-    getShorelineUser, shorelineLogin, shorelineSignup, saveSurveyChoice, renderShorelineAuth, withSlowNotice
+    getShorelineUser, shorelineLogin, shorelineSignup, saveSurveyChoice, renderShorelineAuth, withSlowNotice, getSurveyChoice
 } from '{{ site.baseurl }}/assets/js/shoreline/auth.js';
 
 const loginSection = document.getElementById('shoreline-login-form');
@@ -99,6 +99,18 @@ function showSurvey(user) {
     surveySection.hidden = false;
     document.getElementById('shorelineSurveyGreeting').textContent = user?.name ? `Welcome, ${user.name}!` : 'Welcome!';
     surveySection.scrollIntoView({ behavior: 'smooth' });
+}
+
+// The survey is asked once per account. After that, logging in goes straight home;
+// "Update my choice" in the profile menu opens this page with ?update=1 to change it.
+const wantsUpdate = new URLSearchParams(location.search).has('update');
+
+async function afterLogin(user) {
+    if (!wantsUpdate && await getSurveyChoice()) {
+        window.location.href = '{{ '/' | relative_url }}';
+        return;
+    }
+    showSurvey(user);
 }
 
 // Tabs: Sign In / Create Account
@@ -126,7 +138,7 @@ async function runAuth(form, action) {
         });
         messageEl.textContent = '';
         await renderShorelineAuth(document.getElementById('shorelineAuthArea'));
-        showSurvey(user);
+        await afterLogin(user);
     } catch (err) {
         messageEl.textContent = err.message;
     } finally {
@@ -173,6 +185,6 @@ document.querySelectorAll('#shoreline-login-survey [data-choice]').forEach(butto
 (async () => {
     const user = await getShorelineUser();
     renderShorelineAuth(document.getElementById('shorelineAuthArea'));
-    if (user) showSurvey(user);
+    if (user) await afterLogin(user);
 })();
 </script>
