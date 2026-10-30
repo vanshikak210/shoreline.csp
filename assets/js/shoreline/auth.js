@@ -170,7 +170,7 @@ export async function renderShorelineAuth(el) {
             </button>
             <div class="sl-avatar__menu ocs__links" hidden>
                 <strong class="sl-avatar__name">${name}</strong>
-                <a class="ocs__btn small accent" href="${baseurl}/profile">Profile</a>
+                <a class="ocs__btn small accent" href="${baseurl}/shoreline/profile">Profile</a>
                 <button type="button" class="ocs__btn small alert-red sl-avatar__logout">Log out</button>
             </div>
         </div>`;

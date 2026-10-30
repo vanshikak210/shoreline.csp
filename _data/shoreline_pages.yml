@@ -131,3 +131,18 @@ donate:
         - "Reusable water bottles"
         - "Granola bars and other non-perishable snacks"
         - "Backpacks and rain ponchos"
+
+# /shoreline/profile — choices for the profile form. The Flask backend
+# (api/shoreline.py: NEIGHBORHOODS, AVAILABILITY, INTERESTS, ACTIVITIES) validates
+# against the same lists, so change both together.
+profile:
+  title: "My Shoreline Profile"
+  lead: "Keep your details up to date and log the hours you've volunteered."
+  neighborhoods: ["Pacific Beach", "Mission Beach", "La Jolla", "Other"]
+  availability: ["Weekday mornings", "Weekday evenings", "Weekends", "Flexible"]
+  interests: ["Street Outreach", "Compass Station Support", "Supply Drives", "Donations"]
+  activities: ["Street Outreach", "Compass Station Support", "Supply Drive", "Event", "Other"]
+  choices:
+    - { value: "volunteer", label: "Volunteer" }
+    - { value: "donate", label: "Donate" }
+    - { value: "none", label: "Just browsing" }

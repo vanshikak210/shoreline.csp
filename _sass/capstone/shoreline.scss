@@ -196,6 +196,17 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
   font-family: $sl-heading-font;
 }
 
+// Profile page forms: left-aligned fields inside the centered sections.
+.sl-form {
+  text-align: left;
+  margin-bottom: 1.5rem;
+
+  .ocs__links { flex-wrap: wrap; gap: 12px 24px; }
+  textarea.ocs__input { width: 100%; }
+}
+
+.sl-section .ocs__table-wrap { text-align: left; }
+
 .sl-note {
   @include sl-text-color(#6b7280);
   font-size: 0.9rem;
