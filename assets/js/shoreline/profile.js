@@ -21,11 +21,13 @@ async function readJson(res) {
 
 function serverStore() {
     async function call(path, method = 'GET', body) {
-        const res = await fetch(`${apiURI}/api/shoreline${path}`, {
-            ...fetchOptions,
-            method,
-            ...(body ? { body: JSON.stringify(body) } : {}),
-        });
+        // Plain GETs skip the JSON headers so the browser sends no CORS preflight. A backend
+        // without the Shoreline routes then answers with a real 404 (and we fall back to the
+        // device); a preflight would fail first and show up only as "Failed to fetch".
+        const options = method === 'GET'
+            ? { mode: 'cors', credentials: 'include', cache: 'no-store' }
+            : { ...fetchOptions, method, ...(body ? { body: JSON.stringify(body) } : {}) };
+        const res = await fetch(`${apiURI}/api/shoreline${path}`, options);
         const data = await readJson(res);
         if (!res.ok) {
             const err = new Error(data.message || `Request failed (${res.status})`);
@@ -105,6 +107,30 @@ function renderStats(profile) {
     $('profileGreeting').textContent = profile.name ? `Hi, ${profile.name}!` : 'My Shoreline Profile';
 }
 
+function initials(name = '') {
+    return name.trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('').toUpperCase() || '?';
+}
+
+/** A profile is "new" until any of its own details have been filled in. */
+function isNewProfile(profile) {
+    return !['phone', 'neighborhood', 'availability', 'bio'].some(f => profile[f]) && !(profile.interests || []).length;
+}
+
+function renderCard(profile, uid) {
+    $('cardAvatar').textContent = initials(profile.name);
+    $('cardAvatar').title = profile.name || uid;
+    $('cardName').textContent = profile.name || uid;
+    $('cardMeta').textContent = [`@${uid}`, profile.neighborhood, profile.availability].filter(Boolean).join(' · ');
+    $('cardBio').textContent = profile.bio || 'No bio yet. Click Edit Profile to add one.';
+    const pills = $('cardInterests');
+    pills.replaceChildren(...(profile.interests || []).map(interest => {
+        const pill = document.createElement('span');
+        pill.className = 'ocs__status-pill';
+        pill.textContent = interest;
+        return pill;
+    }));
+}
+
 // Use form.elements: form.name is the form's own name attribute, not the Name input.
 function fillForm(profile) {
     const form = $('profileForm').elements;
@@ -159,7 +185,9 @@ export async function initProfilePage() {
     try {
         ({ store, profile } = await pickStore(user));
     } catch (err) {
-        $('profileStorageNote').textContent = `Couldn't load your profile: ${err.message}`;
+        $('profileStorageNote').textContent = err instanceof TypeError
+            ? 'Couldn\'t reach the Shoreline server. It may be waking up; refresh in a minute.'
+            : `Couldn't load your profile: ${err.message}`;
         return;
     }
     $('profileStorageNote').textContent = store.onServer
@@ -168,9 +196,22 @@ export async function initProfilePage() {
 
     const show = updated => {
         profile = updated;
+        renderCard(profile, user.uid);
         renderStats(profile);
         renderHours(profile, deleteEntry);
     };
+
+    const setEditing = editing => {
+        $('profileEditSection').hidden = !editing;
+        $('editProfileBtn').hidden = editing;
+        if (editing) {
+            fillForm(profile);
+            $('profileStatus').textContent = '';
+            $('profileEditSection').scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+    $('editProfileBtn').addEventListener('click', () => setEditing(true));
+    $('cancelEditBtn').addEventListener('click', () => setEditing(false));
 
     async function deleteEntry(id, btn) {
         btn.disabled = true;
@@ -182,11 +223,16 @@ export async function initProfilePage() {
         }
     }
 
-    fillForm(profile);
     show(profile);
     $('hoursDate').value = today();
     $('hoursDate').max = today();
     $('profileApp').hidden = false;
+
+    // First visit: open the form so the user creates their profile right away.
+    if (isNewProfile(profile)) {
+        $('profileEditTitle').textContent = 'Create Your Profile';
+        setEditing(true);
+    }
 
     $('profileForm').addEventListener('submit', async event => {
         event.preventDefault();
@@ -205,7 +251,8 @@ export async function initProfilePage() {
         status.textContent = 'Saving...';
         try {
             show(await store.save(fields));
-            status.textContent = 'Saved!';
+            $('profileEditTitle').textContent = 'Edit My Profile';
+            setEditing(false);
         } catch (err) {
             status.textContent = err.message;
         } finally {

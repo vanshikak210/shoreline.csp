@@ -29,20 +29,26 @@ custom_header: true
 
 <div id="profileApp" hidden>
 
-<section class="sl-section sl-section--teal">
+<section class="sl-section">
     <div class="sl-container">
-        <h2>My Impact</h2>
-        <div class="ocs__grid ocs__grid--standard cols-3">
-            <div class="ocs__grid-cell ocs__grid-cell--accent"><h3 id="statHours">0</h3>Hours volunteered</div>
-            <div class="ocs__grid-cell ocs__grid-cell--accent"><h3 id="statShifts">0</h3>Shifts logged</div>
-            <div class="ocs__grid-cell ocs__grid-cell--accent"><h3 id="statChoice">—</h3>How I'm helping</div>
+        <div class="ocs__grid ocs__grid--standard cols-1 sl-profile-card">
+            <div class="ocs__grid-cell">
+                <abbr class="ocs__avatar sl-profile-card__avatar" id="cardAvatar" title=""></abbr>
+                <h2 id="cardName"></h2>
+                <p class="sl-note" id="cardMeta"></p>
+                <p id="cardBio"></p>
+                <div class="ocs__links sl-profile-card__pills" id="cardInterests"></div>
+                <div class="ocs__links sl-profile-card__actions">
+                    <button type="button" class="ocs__btn medium accent fill" id="editProfileBtn">Edit Profile</button>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
-<section class="sl-section">
+<section class="sl-section" id="profileEditSection" hidden>
     <div class="sl-container">
-        <h2>My Details</h2>
+        <h2 id="profileEditTitle">Edit My Profile</h2>
         <form id="profileForm" class="ocs__grid ocs__grid--standard cols-2 sl-form">
             <div class="ocs__grid-cell ocs__field">
                 <label class="ocs__label" for="profileName">Name</label>
@@ -101,12 +107,27 @@ custom_header: true
                 <small>Up to 500 characters.</small>
             </div>
             <div class="ocs__grid-cell ocs__grid-cell--wide">
-                <button type="submit" class="ocs__btn medium accent fill">Save Profile</button>
+                <div class="ocs__links">
+                    <button type="submit" class="ocs__btn medium accent fill">Save Profile</button>
+                    <button type="button" class="ocs__btn medium accent" id="cancelEditBtn">Cancel</button>
+                </div>
                 <p id="profileStatus" class="sl-note" role="status"></p>
             </div>
         </form>
     </div>
 </section>
+
+<section class="sl-section sl-section--teal">
+    <div class="sl-container">
+        <h2>My Impact</h2>
+        <div class="ocs__grid ocs__grid--standard cols-3">
+            <div class="ocs__grid-cell ocs__grid-cell--accent"><h3 id="statHours">0</h3>Hours volunteered</div>
+            <div class="ocs__grid-cell ocs__grid-cell--accent"><h3 id="statShifts">0</h3>Shifts logged</div>
+            <div class="ocs__grid-cell ocs__grid-cell--accent"><h3 id="statChoice">—</h3>How I'm helping</div>
+        </div>
+    </div>
+</section>
+
 
 <section class="sl-section sl-section--green">
     <div class="sl-container">

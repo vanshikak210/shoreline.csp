@@ -207,6 +207,23 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
 
 .sl-section .ocs__table-wrap { text-align: left; }
 
+// Keep section headings clear of the sticky header when scrolled into view.
+.sl-section { scroll-margin-top: 90px; }
+
+// Profile card: OCS avatar, name, pills and Edit button, centered.
+.sl-profile-card {
+  max-width: 640px;
+  margin: 0 auto;
+  // cols-1 alone sizes the column to its content; make the card span the width.
+  grid-template-columns: 1fr;
+
+  .ocs__grid-cell { text-align: center; }
+  &__avatar { width: 96px; height: 96px; font-size: 2rem; margin-bottom: 0.5rem; }
+  &__pills,
+  &__actions { justify-content: center; flex-wrap: wrap; }
+  &__actions { margin-top: 1rem; }
+}
+
 .sl-note {
   @include sl-text-color(#6b7280);
   font-size: 0.9rem;
