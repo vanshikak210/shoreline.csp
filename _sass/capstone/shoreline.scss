@@ -329,3 +329,212 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
 @media (max-width: 768px) {
   .sl-header .sl-container { justify-content: center; }
 }
+
+
+// ════════════════════════════════════════════════════════════════════════════
+// Visual polish: beach theme (styles only; markup and OCS components unchanged)
+// ════════════════════════════════════════════════════════════════════════════
+$sl-sun: #fcb900;
+$sl-wave-back: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath fill='%23ffffff' fill-opacity='0.25' d='M0,50 C360,100 360,0 720,50 C1080,100 1080,0 1440,50 L1440,100 L0,100 Z'/%3E%3C/svg%3E");
+$sl-wave-mid: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath fill='%23ffffff' fill-opacity='0.5' d='M0,50 C360,100 360,0 720,50 C1080,100 1080,0 1440,50 L1440,100 L0,100 Z'/%3E%3C/svg%3E");
+$sl-wave-front: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath fill='%23ffffff' fill-opacity='1' d='M0,50 C360,100 360,0 720,50 C1080,100 1080,0 1440,50 L1440,100 L0,100 Z'/%3E%3C/svg%3E");
+$sl-wave-footer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath fill='%232a3235' fill-opacity='1' d='M0,50 C360,100 360,0 720,50 C1080,100 1080,0 1440,50 L1440,100 L0,100 Z'/%3E%3C/svg%3E");
+
+// Header: frosted glass over the page as it scrolls under.
+.sl-header {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(28, 36, 75, 0.06);
+  box-shadow: 0 6px 24px rgba(28, 36, 75, 0.06);
+}
+
+.sl-nav a {
+  position: relative;
+  padding-bottom: 2px;
+  transition: color 0.2s;
+
+  // Teal underline that grows on hover.
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background: $sl-teal;
+    transform: scaleX(0);
+    transition: transform 0.2s;
+  }
+  &:hover { color: $sl-teal; }
+  &:hover::after { transform: scaleX(1); }
+}
+
+// Hero: ocean at sunset with a glowing sun (like the logo) and rolling waves.
+.sl-hero {
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 150px;
+  background:
+    radial-gradient(circle at 90% 22%, rgba(252, 185, 0, 0.95) 0, rgba(252, 185, 0, 0.95) 40px, rgba(252, 185, 0, 0.35) 46px, rgba(252, 185, 0, 0.12) 110px, transparent 200px),
+    radial-gradient(ellipse at 20% 110%, rgba(67, 192, 212, 0.55), transparent 60%),
+    linear-gradient(180deg, $sl-navy 0%, #23406f 45%, #2b7fa6 78%, $sl-teal 100%);
+
+  > .sl-container { position: relative; z-index: 1; }
+
+  h1 { text-shadow: 0 4px 24px rgba(10, 20, 50, 0.35); letter-spacing: -0.01em; }
+  p { text-shadow: 0 2px 12px rgba(10, 20, 50, 0.35); }
+
+  // Three wave layers drifting at different speeds; the front one is white so the
+  // hero rolls straight into the page below.
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 110px;
+    background-image: $sl-wave-back, $sl-wave-mid, $sl-wave-front;
+    background-repeat: repeat-x;
+    background-size: 1440px 100px, 1440px 80px, 1440px 56px;
+    background-position: 0 100%, 300px 100%, 0 100%;
+    animation: sl-waves 24s linear infinite;
+    pointer-events: none;
+  }
+}
+
+.sl-hero--short { padding-bottom: 130px; }
+
+// Narrow screens: tuck the sun into the corner so it never sits behind the headline.
+@media (max-width: 900px) {
+  .sl-hero {
+    background:
+      radial-gradient(circle at 92% 10%, rgba(252, 185, 0, 0.95) 0, rgba(252, 185, 0, 0.95) 26px, rgba(252, 185, 0, 0.3) 32px, transparent 110px),
+      radial-gradient(ellipse at 20% 110%, rgba(67, 192, 212, 0.55), transparent 60%),
+      linear-gradient(180deg, $sl-navy 0%, #23406f 45%, #2b7fa6 78%, $sl-teal 100%);
+  }
+}
+
+@keyframes sl-waves {
+  from { background-position: 0 100%, 300px 100%, 0 100%; }
+  to { background-position: -1440px 100%, 1740px 100%, -720px 100%; }
+}
+
+// The waves end in white, so sections under the hero fade in from white too.
+.sl-hero + .sl-section--teal {
+  background:
+    radial-gradient(ellipse at 15% 30%, rgba(255, 255, 255, 0.18), transparent 55%),
+    linear-gradient(180deg, #fff 0, $sl-teal $sl-fade, $sl-teal-deep calc(100% - #{$sl-fade}), #fff 100%);
+}
+
+// White sections: faint dotted "sand" texture over the teal tint.
+.sl-section:not(.sl-section--teal):not(.sl-section--green):not(.sl-section--emergency) {
+  background:
+    radial-gradient(rgba(67, 192, 212, 0.13) 1.2px, transparent 1.6px) 0 0 / 22px 22px,
+    linear-gradient(180deg, #fff 0%, $sl-mist 100%);
+}
+
+// Section headings: bigger, with a small sun-to-sea accent bar.
+.sl-section h2 {
+  font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+
+  &::after {
+    content: "";
+    display: block;
+    width: 64px;
+    height: 4px;
+    margin: 14px auto 0;
+    border-radius: 4px;
+    background: linear-gradient(90deg, $sl-sun, $sl-teal);
+  }
+}
+.sl-section--teal h2::after { background: linear-gradient(90deg, $sl-sun, #fff); }
+
+// Cards: colored top edge, soft shadow, lift on hover.
+.sl-section .ocs__grid--card > .ocs__grid-cell {
+  border: 1px solid rgba(28, 36, 75, 0.06);
+  border-top: 5px solid $sl-teal;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(28, 36, 75, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+  &:nth-child(3n + 2) { border-top-color: #8cc65a; }
+  &:nth-child(3n + 3) { border-top-color: $sl-sun; }
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px rgba(28, 36, 75, 0.14);
+  }
+
+  h3 { font-weight: 700; }
+}
+
+// Stat tiles: big bold numbers.
+.sl-section .ocs__grid-cell--accent {
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(10, 60, 80, 0.12);
+  transition: transform 0.25s ease;
+
+  &:hover { transform: translateY(-4px); }
+
+  h3 {
+    font-size: clamp(2rem, 4vw, 2.6rem);
+    font-weight: 800;
+    margin-bottom: 0.15em;
+    @include sl-text-color($sl-navy);
+  }
+}
+
+// Buttons: gentle lift and glow on hover.
+.shoreline-site .ocs__btn {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(67, 192, 212, 0.35);
+  }
+}
+
+// Footer: rises out of the page on a wave.
+.sl-footer {
+  position: relative;
+  margin-top: 60px;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -59px;
+    height: 60px;
+    background: $sl-wave-footer repeat-x 0 100% / 1440px 60px;
+    pointer-events: none;
+  }
+}
+
+// Cards and tiles fade up as they scroll into view (browsers that support it).
+@supports (animation-timeline: view()) {
+  .sl-section .ocs__grid > .ocs__grid-cell {
+    animation: sl-rise linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 60%;
+  }
+}
+
+@keyframes sl-rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: none; }
+}
+
+// Respect people who turn off motion.
+@media (prefers-reduced-motion: reduce) {
+  .sl-hero::after,
+  .sl-section .ocs__grid > .ocs__grid-cell { animation: none; }
+  .sl-section .ocs__grid--card > .ocs__grid-cell:hover,
+  .sl-section .ocs__grid-cell--accent:hover,
+  .shoreline-site .ocs__btn:hover { transform: none; }
+}
