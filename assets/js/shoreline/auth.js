@@ -18,9 +18,9 @@ const SURVEY_KEY = 'shoreline.survey';
 // from config.js, so people sign in with their Open Coding Society account. The team's
 // own github.io site can't use that backend (OCS only accepts opencodingsociety.com
 // origins), so there it uses the Shoreline backend on Render, reached through a Vercel
-// proxy (shoreline-flask/vercel-proxy) because school Wi-Fi blocks onrender.com.
+// GitHub Codespace (shoreline-flask/.devcontainer) because school Wi-Fi blocks onrender.com and vercel.app.
 const SHORELINE_BACKENDS = {
-    'vanshikak210.github.io': 'https://shoreline-flask-vercel-proxy.vercel.app',
+    'vanshikak210.github.io': 'https://didactic-space-cod-77rqrpr7w9w9hwq4-8587.app.github.dev',
 };
 export const apiURI = SHORELINE_BACKENDS[location.hostname] || pythonURI;
 
