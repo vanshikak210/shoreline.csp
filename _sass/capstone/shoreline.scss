@@ -7,8 +7,13 @@ $sl-teal: #43c0d4;
 $sl-green: #badc8f;
 $sl-navy: #1c244b;
 $sl-text: #3c3c3c;
+$sl-ink: #262b36;         // darker body text for lists and steps
 $sl-red: #cf2e2e;
 $sl-footer: #2a3235;
+$sl-teal-deep: #2ea6bd;   // darker end of the teal gradient
+$sl-green-light: #d4ebb4; // lighter start of the green gradient
+$sl-mist: #eef8fa;        // faint teal tint for white sections
+$sl-fade: 48px;           // height of the fade into white at section edges
 $sl-heading-font: "Asap", "Helvetica Neue", Arial, sans-serif;
 $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
 
@@ -152,19 +157,39 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
 
   &__intro { max-width: 720px; margin: 0 auto 1.5em; }
 
-  &--teal { background: $sl-teal; }
+  // Soft Shoreline gradients that fade into white at the edges, so sections blend
+  // into each other instead of stacking as flat color blocks. The fades stay inside
+  // the 64px padding, so text always sits on the solid part.
+  background: linear-gradient(180deg, #fff 0%, $sl-mist 100%);
+
+  &--teal {
+    background:
+      radial-gradient(ellipse at 15% 30%, rgba(255, 255, 255, 0.18), transparent 55%),
+      linear-gradient(180deg, #fff 0, $sl-teal $sl-fade, $sl-teal-deep calc(100% - #{$sl-fade}), #fff 100%);
+  }
   &--teal, &--teal h2, &--teal p { @include sl-text-color(#fff); }
   &--teal &__lead { @include sl-text-color($sl-navy); font-weight: 600; font-size: 1.15rem; }
 
-  &--green { background: $sl-green; }
+  &--green {
+    background:
+      radial-gradient(ellipse at 85% 20%, rgba(255, 255, 255, 0.35), transparent 55%),
+      linear-gradient(180deg, #fff 0, $sl-green-light $sl-fade, $sl-green calc(100% - #{$sl-fade}), #fff 100%);
+  }
   &--green &__intro { @include sl-text-color($sl-navy); }
   &--green .ocs__grid-cell { text-align: left; }
 
   // Red tone so the OCS header cell and borders read as urgent.
   &--emergency {
-    background: #fff5f5;
+    background: linear-gradient(180deg, #fff 0, #fff5f5 $sl-fade, #fff5f5 100%);
     --pref-accent-color: #{$sl-red};
   }
+}
+
+// Directly under the dark hero, skip the white fade-in.
+.sl-hero + .sl-section--teal {
+  background:
+    radial-gradient(ellipse at 15% 30%, rgba(255, 255, 255, 0.18), transparent 55%),
+    linear-gradient(180deg, $sl-teal 0, $sl-teal-deep calc(100% - #{$sl-fade}), #fff 100%);
 }
 
 // ── Section pages (_includes/shoreline/page.html) ──
@@ -177,7 +202,9 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
   text-align: left;
   font-size: 1.05rem;
 
-  li { margin: 0.5em 0; }
+  // The OCS theme recolors every li to its (light) text color; set Shoreline's dark text.
+  li { margin: 0.5em 0; @include sl-text-color($sl-ink); }
+  li::marker { color: $sl-navy; }
 }
 
 .sl-section--teal li { @include sl-text-color(#fff); }
@@ -194,6 +221,7 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
 .sl-steps strong {
   display: block;
   font-family: $sl-heading-font;
+  @include sl-text-color($sl-navy);
 }
 
 // Profile page forms: left-aligned fields inside the centered sections.
@@ -222,6 +250,20 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
   &__pills,
   &__actions { justify-content: center; flex-wrap: wrap; }
   &__actions { margin-top: 1rem; }
+}
+
+// OCS card grids size to their content; inside Shoreline sections let the cards
+// share the full row (2 cards = two halves, 3 = thirds) and wrap on small screens.
+.sl-section .ocs__grid--card {
+  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+// cols-2 (two or four cards) stays two-up so four cards make a 2x2, not 3 + 1.
+.sl-section .ocs__grid--card.cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  @media (max-width: 700px) { grid-template-columns: 1fr; }
 }
 
 .sl-note {
