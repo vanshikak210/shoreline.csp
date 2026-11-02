@@ -17,9 +17,10 @@ const SURVEY_KEY = 'shoreline.survey';
 // Which Flask backend to use. On OCS domains (and localhost) it's the class backend
 // from config.js, so people sign in with their Open Coding Society account. The team's
 // own github.io site can't use that backend (OCS only accepts opencodingsociety.com
-// origins), so there it uses the Shoreline backend on Render.
+// origins), so there it uses the Shoreline backend on Render, reached through a Vercel
+// proxy (shoreline-flask/vercel-proxy) because school Wi-Fi blocks onrender.com.
 const SHORELINE_BACKENDS = {
-    'vanshikak210.github.io': 'https://shoreline-flask.onrender.com',
+    'vanshikak210.github.io': 'https://shoreline-flask-vercel-proxy.vercel.app',
 };
 export const apiURI = SHORELINE_BACKENDS[location.hostname] || pythonURI;
 
