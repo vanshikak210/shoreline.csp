@@ -538,3 +538,57 @@ $sl-wave-footer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
   .sl-section .ocs__grid-cell--accent:hover,
   .shoreline-site .ocs__btn:hover { transform: none; }
 }
+
+// ── Page banners: the sunset (with sun) is the home page's; every other page gets
+// its own Shoreline-colored scene. All keep the rolling waves from .sl-hero::after.
+// Classes come from _includes/shoreline/page.html (sl-hero--<page key>) and profile.md.
+
+// Fallback for any section page without its own scene: calm open ocean.
+.sl-hero.sl-hero--short {
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(255, 255, 255, 0.22), transparent 55%),
+    linear-gradient(180deg, $sl-navy 0%, #22507e 55%, $sl-teal 100%);
+}
+
+// Our Impact: deep ocean with light rays from the surface.
+.sl-hero.sl-hero--impact {
+  background:
+    repeating-linear-gradient(105deg, rgba(255, 255, 255, 0) 0 60px, rgba(255, 255, 255, 0.06) 60px 90px, rgba(255, 255, 255, 0) 90px 170px),
+    radial-gradient(ellipse at 50% -20%, rgba(186, 236, 245, 0.45), transparent 60%),
+    linear-gradient(180deg, #0f2a4a 0%, #165a7e 55%, $sl-teal 100%);
+}
+
+// Get Help: early dawn with a soft lighthouse-style glow.
+.sl-hero.sl-hero--help {
+  background:
+    radial-gradient(ellipse 60% 120% at 12% 20%, rgba(255, 244, 214, 0.35), transparent 60%),
+    radial-gradient(ellipse at 85% 0%, rgba(67, 192, 212, 0.35), transparent 55%),
+    linear-gradient(180deg, $sl-navy 0%, #33507f 50%, #4fa8c2 100%);
+}
+
+// Volunteer: teal into green (community) with floating bubbles.
+.sl-hero.sl-hero--volunteer {
+  background:
+    radial-gradient(circle at 12% 30%, rgba(255, 255, 255, 0.18) 0 18px, transparent 19px),
+    radial-gradient(circle at 22% 70%, rgba(255, 255, 255, 0.12) 0 10px, transparent 11px),
+    radial-gradient(circle at 82% 25%, rgba(255, 255, 255, 0.16) 0 26px, transparent 27px),
+    radial-gradient(circle at 90% 65%, rgba(255, 255, 255, 0.12) 0 12px, transparent 13px),
+    radial-gradient(circle at 70% 45%, rgba(255, 255, 255, 0.10) 0 8px, transparent 9px),
+    linear-gradient(160deg, #1d4f6e 0%, #2b94ad 50%, #6fbf8a 100%);
+}
+
+// Donate: warm golden horizon (sunset glow, no sun).
+.sl-hero.sl-hero--donate {
+  background:
+    radial-gradient(ellipse 120% 60% at 50% 100%, rgba(252, 185, 0, 0.55), transparent 70%),
+    linear-gradient(180deg, $sl-navy 0%, #3a3f74 45%, #c0745a 80%, #f2a43a 100%);
+}
+
+// Profile: night sky with faint stars.
+.sl-hero.sl-hero--profile {
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.55) 0 1px, transparent 1.5px) 0 0 / 90px 90px,
+    radial-gradient(circle, rgba(255, 255, 255, 0.35) 0 1px, transparent 1.5px) 45px 30px / 120px 120px,
+    radial-gradient(ellipse at 50% 120%, rgba(67, 192, 212, 0.45), transparent 60%),
+    linear-gradient(180deg, #0d1733 0%, $sl-navy 55%, #23517a 100%);
+}

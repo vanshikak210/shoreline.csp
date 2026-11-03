@@ -12,7 +12,7 @@ custom_header: true
 
 {% include shoreline/header.html %}
 
-<section class="sl-hero sl-hero--short">
+<section class="sl-hero sl-hero--short sl-hero--profile">
     <div class="sl-container">
         <h1 id="profileGreeting">{{ p.title }}</h1>
         <p>{{ p.lead }}</p>
