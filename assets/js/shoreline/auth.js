@@ -20,7 +20,7 @@ const SURVEY_KEY = 'shoreline.survey';
 // origins), so there it uses the Shoreline backend on Render, reached through a Vercel
 // GitHub Codespace (shoreline-flask/.devcontainer) because school Wi-Fi blocks onrender.com and vercel.app.
 const SHORELINE_BACKENDS = {
-    'vanshikak210.github.io': 'https://didactic-space-cod-77rqrpr7w9w9hwq4-8587.app.github.dev',
+    'vanshikak210.github.io': 'https://fluffy-space-dollop-5v464x4v5q97fp6rv-8587.app.github.dev',
 };
 export const apiURI = SHORELINE_BACKENDS[location.hostname] || pythonURI;
 
