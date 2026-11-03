@@ -550,12 +550,23 @@ $sl-wave-footer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
     linear-gradient(180deg, $sl-navy 0%, #22507e 55%, $sl-teal 100%);
 }
 
-// Our Impact: deep ocean with light rays from the surface.
+// Our Impact: deep ocean with light rays, plus the sun (same as the home page).
 .sl-hero.sl-hero--impact {
   background:
+    radial-gradient(circle at 90% 22%, rgba(252, 185, 0, 0.95) 0, rgba(252, 185, 0, 0.95) 40px, rgba(252, 185, 0, 0.35) 46px, rgba(252, 185, 0, 0.12) 110px, transparent 200px),
     repeating-linear-gradient(105deg, rgba(255, 255, 255, 0) 0 60px, rgba(255, 255, 255, 0.06) 60px 90px, rgba(255, 255, 255, 0) 90px 170px),
     radial-gradient(ellipse at 50% -20%, rgba(186, 236, 245, 0.45), transparent 60%),
     linear-gradient(180deg, #0f2a4a 0%, #165a7e 55%, $sl-teal 100%);
+}
+
+@media (max-width: 900px) {
+  .sl-hero.sl-hero--impact {
+    background:
+      radial-gradient(circle at 92% 10%, rgba(252, 185, 0, 0.95) 0, rgba(252, 185, 0, 0.95) 26px, rgba(252, 185, 0, 0.3) 32px, transparent 110px),
+      repeating-linear-gradient(105deg, rgba(255, 255, 255, 0) 0 60px, rgba(255, 255, 255, 0.06) 60px 90px, rgba(255, 255, 255, 0) 90px 170px),
+      radial-gradient(ellipse at 50% -20%, rgba(186, 236, 245, 0.45), transparent 60%),
+      linear-gradient(180deg, #0f2a4a 0%, #165a7e 55%, $sl-teal 100%);
+  }
 }
 
 // Get Help: early dawn with a soft lighthouse-style glow.
