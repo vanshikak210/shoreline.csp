@@ -28,6 +28,8 @@ permalink: /capstone/shoreline-volunteer/
     Github Repository
 </a>
 
+{% include shoreline/kit-infograph.html %}
+
 ---
 
 <div class="ocs__grid ocs__grid--card cols-3">

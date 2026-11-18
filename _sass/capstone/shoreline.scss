@@ -603,3 +603,284 @@ $sl-wave-footer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
     radial-gradient(ellipse at 50% 120%, rgba(67, 192, 212, 0.45), transparent 60%),
     linear-gradient(180deg, #0d1733 0%, $sl-navy 55%, #23517a 100%);
 }
+
+// ════════════════════════════════════════════════════════════════════════════
+// "Shoreline Connect" infographic (_includes/shoreline/kit-infograph.html)
+// Light card in Shoreline colors, one color per project stage.
+// ════════════════════════════════════════════════════════════════════════════
+$sl-kit-tones: (
+  teal:  (#43c0d4, #1f8ea3),
+  navy:  (#2f4a8a, #1c244b),
+  green: (#8cc65a, #4f8a2a),
+  gold:  (#fcb900, #9a6d00),
+  coral: (#e8735a, #b5482f)
+);
+
+.sl-kit {
+  --pref-bg-color: #fff;
+  --panel: #fff;
+  --ui-border: #dfe9ec;
+  @include sl-text-color($sl-text);
+  // The capstone post column is ~680px: too narrow for five stages side by side, so
+  // the infographic extends past it (centered, up to 1240px) like a full-width figure.
+  width: min(1240px, calc(100vw - 32px));
+  margin: 1.5rem 0 1.5rem calc(50% - min(620px, 50vw - 16px));
+  padding: 20px;
+  border-radius: 22px;
+  background:
+    radial-gradient(rgba(67, 192, 212, 0.10) 1.2px, transparent 1.6px) 0 0 / 22px 22px,
+    linear-gradient(180deg, #f7fcfd, #eef8fa);
+  font-family: $sl-body-font;
+  line-height: 1.45;
+
+  h2, h3, strong { font-family: $sl-heading-font; }
+  ul, ol { list-style: none; margin: 0; padding: 0; }
+
+  // ── Banner ──
+  &__banner {
+    display: grid;
+    grid-template-columns: auto 1fr minmax(220px, 300px);
+    align-items: center;
+    gap: 20px;
+    padding: 18px 26px;
+    border-radius: 16px;
+    background:
+      radial-gradient(circle at 96% 20%, rgba(252, 185, 0, 0.35), transparent 30%),
+      linear-gradient(120deg, $sl-navy, #23406f 60%, #2b7fa6);
+    box-shadow: 0 10px 30px rgba(28, 36, 75, 0.18);
+    * { @include sl-text-color(#fff); }
+  }
+  &__brand {
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    padding-right: 22px;
+    border-right: 2px solid rgba(255, 255, 255, 0.35);
+    strong { font-size: 1.15rem; }
+    small { font-size: 0.75rem; @include sl-text-color(#ffd77a); }
+  }
+  &__sun {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: radial-gradient(circle, $sl-sun 45%, $sl-teal 46%, $sl-teal 60%, transparent 61%);
+  }
+  &__title {
+    h2 {
+      margin: 0;
+      font-size: clamp(1.8rem, 4vw, 2.7rem);
+      font-weight: 800;
+      line-height: 1.1;
+      &::after { display: none; }
+    }
+    p { margin: 4px 0 0; font-style: italic; font-weight: 600; font-size: 1.05rem; }
+  }
+  &__summary {
+    margin: 0;
+    padding-left: 22px;
+    border-left: 2px solid rgba(255, 255, 255, 0.35);
+    font-style: italic;
+    font-size: 0.95rem;
+  }
+
+  // ── Stages ──
+  &__stages {
+    width: 100%;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 26px;
+    margin: 22px 0;
+  }
+  // Doubled class beats the OCS card-cell rules (padding, flex-start alignment),
+  // which squeezed each stage's header to the width of its text.
+  &__stages > &__stage.ocs__grid-cell {
+    padding: 0;
+    flex-direction: column;
+    align-items: stretch;
+    min-width: 0;
+  }
+  &__stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: visible;
+    border: 2px solid var(--kit-tone);
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 8px 22px rgba(28, 36, 75, 0.08);
+    text-align: center;
+
+    // Arrow to the next stage.
+    &:not(:last-child)::after {
+      content: "➜";
+      position: absolute;
+      right: -24px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.3rem;
+      @include sl-text-color($sl-teal);
+    }
+  }
+  @each $name, $pair in $sl-kit-tones {
+    &__stage--#{$name} {
+      --kit-tone: #{nth($pair, 1)};
+      --kit-dark: #{nth($pair, 2)};
+    }
+  }
+  &__stage-head {
+    padding: 12px 10px;
+    border-radius: 13px 13px 0 0;
+    background: var(--kit-tone);
+    strong { display: block; font-size: 1.15rem; @include sl-text-color(#fff); }
+    em { font-size: 0.85rem; @include sl-text-color(#fff); }
+  }
+  &__stage--gold &__stage-head strong,
+  &__stage--gold &__stage-head em { @include sl-text-color($sl-navy); }
+  &__icon {
+    margin: 14px auto 6px;
+    width: 72px;
+    height: 72px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-size: 2.1rem;
+    background: color-mix(in srgb, var(--kit-tone) 16%, #fff);
+  }
+  &__status {
+    align-self: center;
+    margin-bottom: 8px;
+    font-size: 0.7rem;
+  }
+  &__checks {
+    display: grid;
+    gap: 6px;
+    padding: 0 14px !important;
+    text-align: left;
+    li {
+      position: relative;
+      padding-left: 24px;
+      font-size: 0.9rem;
+      @include sl-text-color($sl-ink);
+      &::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 17px;
+        height: 17px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #fff;
+        background: var(--kit-dark, #{$sl-teal});
+      }
+    }
+  }
+  &__outcome {
+    margin: auto 0 0 !important;
+    padding: 12px 12px 14px;
+    font-family: $sl-heading-font;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: var(--kit-dark);
+    --pref-text-color: var(--kit-dark);
+  }
+
+  // ── Partnership ──
+  &__partner {
+    margin-top: 26px;
+    padding: 22px 20px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid #d6eaef;
+    text-align: center;
+  }
+  &__partner-title {
+    display: inline-block;
+    margin: 0 0 10px;
+    padding: 8px 26px;
+    border-radius: 999px;
+    background: $sl-navy;
+    font-size: 1.35rem;
+    @include sl-text-color(#fff);
+  }
+  &__partner-lead {
+    margin: 0 0 16px;
+    font-weight: 600;
+    @include sl-text-color($sl-navy);
+  }
+  &__partner-grid {
+    width: 100%;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 18px;
+  }
+  &__partner-grid > .ocs__grid-cell { min-width: 0; }
+  &__side {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding: 16px 20px;
+    border-radius: 16px;
+    text-align: left;
+    strong { display: block; margin-bottom: 6px; font-size: 1.25rem; @include sl-text-color($sl-navy); }
+  }
+  &__side--students { background: #e3f5f9; --kit-dark: #1f8ea3; border: 1px solid #c4e8f0; }
+  &__side--shoreline { background: #ecf6df; --kit-dark: #4f8a2a; border: 1px solid #d3eabd; }
+  &__side-icon { font-size: 3rem; line-height: 1; }
+  &__center {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    strong { position: relative; max-width: 96px; text-align: center; font-size: 1.15rem; line-height: 1.15; @include sl-text-color($sl-navy); }
+  }
+  // Circular two-color "cycle" ring behind "Together We Help".
+  &__loop {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 7px solid transparent;
+    border-top-color: $sl-teal;
+    border-right-color: $sl-teal;
+    border-bottom-color: #8cc65a;
+    border-left-color: #8cc65a;
+    transform: rotate(-20deg);
+  }
+
+  &__footer {
+    margin: 18px auto 0;
+    padding: 12px 24px;
+    max-width: 900px;
+    border-radius: 999px;
+    background: $sl-navy;
+    text-align: center;
+    font-family: $sl-heading-font;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 1.05rem;
+    @include sl-text-color(#fff);
+  }
+
+  // ── Smaller screens ──
+  @media (max-width: 1000px) {
+    &__banner { grid-template-columns: 1fr; text-align: center; }
+    &__brand { border-right: 0; padding-right: 0; }
+    &__summary { border-left: 0; padding-left: 0; }
+    &__stages { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    &__stage::after { display: none; }
+    &__partner-grid { grid-template-columns: 1fr; justify-items: center; }
+    &__side { width: 100%; }
+  }
+  @media (max-width: 600px) {
+    &__stages { grid-template-columns: 1fr; }
+  }
+}

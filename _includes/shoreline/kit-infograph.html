@@ -1,0 +1,71 @@
+{%- comment -%}
+  "Shoreline Connect" infographic: five project stages and the win-win partnership.
+  Content: _data/shoreline_kit.yml. Styles: _sass/capstone/shoreline.scss (.sl-kit).
+  Built from OCS grids so it follows the site theme like other capstone infographs.
+{%- endcomment -%}
+{%- assign kit = site.data.shoreline_kit -%}
+<!-- markdownlint-disable MD033 -->
+<div class="sl-kit">
+
+  <div class="sl-kit__banner">
+    <div class="sl-kit__brand">
+      <span class="sl-kit__sun" aria-hidden="true"></span>
+      <strong>Shoreline</strong>
+      <small>Community Services</small>
+    </div>
+    <div class="sl-kit__title">
+      <h2>{{ kit.title }}</h2>
+      <p>{{ kit.tagline }}</p>
+    </div>
+    <p class="sl-kit__summary">{{ kit.summary }}</p>
+  </div>
+
+  <ol class="ocs__grid ocs__grid--card cols-5 sl-kit__stages">
+    {%- for stage in kit.stages %}
+    <li class="ocs__grid-cell sl-kit__stage sl-kit__stage--{{ stage.tone }}">
+      <div class="sl-kit__stage-head">
+        <strong>{{ forloop.index }}. {{ stage.name }}</strong>
+        <em>{{ stage.subtitle }}</em>
+      </div>
+      <div class="sl-kit__icon" aria-hidden="true">{{ stage.icon }}</div>
+      <span class="ocs__status-pill sl-kit__status">{% if stage.status == "live" %}Live now{% else %}Coming next{% endif %}</span>
+      <ul class="sl-kit__checks">
+        {%- for item in stage.items %}
+        <li>{{ item }}</li>
+        {%- endfor %}
+      </ul>
+      <p class="sl-kit__outcome">{{ stage.outcome }}</p>
+    </li>
+    {%- endfor %}
+  </ol>
+
+  <div class="sl-kit__partner">
+    <h3 class="sl-kit__partner-title">{{ kit.partnership.title }}</h3>
+    <p class="sl-kit__partner-lead">{{ kit.partnership.lead }}</p>
+    <div class="ocs__grid ocs__grid--standard cols-3 sl-kit__partner-grid">
+      {%- assign first = kit.partnership.sides[0] -%}
+      {%- assign second = kit.partnership.sides[1] -%}
+      <div class="ocs__grid-cell sl-kit__side sl-kit__side--students">
+        <div class="sl-kit__side-icon" aria-hidden="true">{{ first.icon }}</div>
+        <div>
+          <strong>{{ first.heading }}</strong>
+          <ul class="sl-kit__checks">{% for item in first.items %}<li>{{ item }}</li>{% endfor %}</ul>
+        </div>
+      </div>
+      <div class="ocs__grid-cell sl-kit__center" aria-hidden="true">
+        <span class="sl-kit__loop"></span>
+        <strong>{{ kit.partnership.center }}</strong>
+      </div>
+      <div class="ocs__grid-cell sl-kit__side sl-kit__side--shoreline">
+        <div class="sl-kit__side-icon" aria-hidden="true">{{ second.icon }}</div>
+        <div>
+          <strong>{{ second.heading }}</strong>
+          <ul class="sl-kit__checks">{% for item in second.items %}<li>{{ item }}</li>{% endfor %}</ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="sl-kit__footer">{{ kit.footer }}</p>
+</div>
+<!-- markdownlint-enable MD033 -->

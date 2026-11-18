@@ -1,0 +1,57 @@
+# "Shoreline Connect" project infographic (modeled on OCS-in-a-Kit).
+# Rendered by _includes/shoreline/kit-infograph.html on the capstone page.
+# status: "live" for what the site already does, "next" for planned work.
+title: "Shoreline Connect"
+tagline: "Start with a neighbor. Build a solution. Grow together."
+summary: "A student-built platform connecting volunteers, donors and neighbors in need across Pacific Beach, Mission Beach and La Jolla."
+
+stages:
+  - name: "Prototype"
+    subtitle: "Explore and Learn"
+    icon: "🖥️"
+    tone: teal
+    status: live
+    items: ["GitHub Pages & Jekyll", "OCS components & SCSS", "Flask for data"]
+    outcome: "Turn ideas into a working site."
+  - name: "Production"
+    subtitle: "Go Live with Confidence"
+    icon: "☁️"
+    tone: navy
+    status: live
+    items: ["Flask backend in Codespaces", "SQLite database", "Logins & profiles"]
+    outcome: "Real accounts, real data."
+  - name: "Engagement"
+    subtitle: "Add What Volunteers Need"
+    icon: "💬"
+    tone: green
+    status: live
+    items: ["Donate / volunteer survey", "Volunteer hours log", "Donate & needs pages"]
+    outcome: "Turn visitors into volunteers."
+  - name: "Community"
+    subtitle: "Show Where Help Is Needed"
+    icon: "🗺️"
+    tone: gold
+    status: next
+    items: ["Homelessness hotspot map", "Impact dashboard", "Get Help navigation"]
+    outcome: "Point help where it's needed most."
+  - name: "Partnership"
+    subtitle: "Grow with Shoreline"
+    icon: "🤝"
+    tone: coral
+    status: next
+    items: ["Volunteer shift calendar", "Real outreach data", "Hand-off to Shoreline staff"]
+    outcome: "Build tools for Shoreline's mission."
+
+partnership:
+  title: "A Win-Win Partnership"
+  lead: "Shoreline Connect links student learning with the real needs of a nonprofit in our community."
+  center: "Together We Help"
+  sides:
+    - heading: "Students Gain"
+      icon: "🎓"
+      items: ["Real full-stack experience", "A real nonprofit client", "A portfolio-ready project"]
+    - heading: "Shoreline Gains"
+      icon: "🏠"
+      items: ["A modern, mobile-friendly site", "Volunteer & donor tools", "Data on community impact"]
+
+footer: "A stronger Central Beach community through technology, service and partnership."
