@@ -1,57 +1,58 @@
-# "Shoreline Connect" project infographic (modeled on OCS-in-a-Kit).
+# "Shoreline Connect, built with OCS-in-a-Kit" infographic (follows the team's pitch).
 # Rendered by _includes/shoreline/kit-infograph.html on the capstone page.
-# status: "live" for what the site already does, "next" for planned work.
 title: "Shoreline Connect"
-tagline: "Start with a neighbor. Build a solution. Grow together."
-summary: "A student-built platform connecting volunteers, donors and neighbors in need across Pacific Beach, Mission Beach and La Jolla."
+subtitle: "built with OCS-in-a-Kit"
+tagline: "Start with a story. Build a solution. Grow as you need."
+summary: "An open-source foundation to help Shoreline reach more people across Pacific Beach, Mission Beach and La Jolla."
+
+heard:
+  title: "What We Heard"
+  items:
+    - { icon: "🙋", heading: "Volunteers", text: "Coordinated by hand through calls and messages, not always where the need is greatest." }
+    - { icon: "💝", heading: "Donations", text: "Mostly through an Instagram link, and donors can't easily see what a gift does." }
+    - { icon: "🧭", heading: "People Seeking Help", text: "Need a quick, simple way to find services and reach the outreach team." }
+    - { icon: "📊", heading: "Your Impact", text: "Real, but hard for the public to see in numbers." }
 
 stages:
   - name: "Prototype"
-    subtitle: "Explore and Learn"
+    subtitle: "A Place to Start Building"
     icon: "🖥️"
     tone: teal
-    status: live
-    items: ["GitHub Pages & Jekyll", "OCS components & SCSS", "Flask for data"]
-    outcome: "Turn ideas into a working site."
+    badge: "Start here"
+    items: ["Volunteer Hub: need map + shift calendar", "Giving Center + Needs Right Now", "\"Need Help?\" page", "Impact Dashboard"]
+    outcome: "Try it before you commit."
   - name: "Production"
-    subtitle: "Go Live with Confidence"
+    subtitle: "Taking It Live"
     icon: "☁️"
-    tone: navy
-    status: live
-    items: ["Flask backend in Codespaces", "SQLite database", "Logins & profiles"]
-    outcome: "Real accounts, real data."
-  - name: "Engagement"
-    subtitle: "Add What Volunteers Need"
-    icon: "💬"
     tone: green
-    status: live
-    items: ["Donate / volunteer survey", "Volunteer hours log", "Donate & needs pages"]
-    outcome: "Turn visitors into volunteers."
-  - name: "Community"
-    subtitle: "Show Where Help Is Needed"
-    icon: "🗺️"
-    tone: gold
-    status: next
-    items: ["Homelessness hotspot map", "Impact dashboard", "Get Help navigation"]
-    outcome: "Point help where it's needed most."
-  - name: "Partnership"
-    subtitle: "Grow with Shoreline"
+    badge: "Go live"
+    items: ["Managed database", "Secure file storage", "Email confirmations & receipts", "Backup & recovery", "Everything on shorelinecs.org"]
+    outcome: "Up to 12 months of free hosting."
+  - name: "Extended Services"
+    subtitle: "Add What You Need"
+    icon: "📅"
+    tone: navy
+    badge: "Add as needed"
+    items: ["OCS Calendar for shifts & events", "OCS Chat for outreach teams", "OCS Email for reminders & thanks"]
+    outcome: "Turn on one piece at a time."
+  - name: "Built Around Shoreline"
+    subtitle: "Shaped to Your Work"
     icon: "🤝"
     tone: coral
-    status: next
-    items: ["Volunteer shift calendar", "Real outreach data", "Hand-off to Shoreline staff"]
-    outcome: "Build tools for Shoreline's mission."
+    badge: "Made for you"
+    items: ["No-code staff dashboard", "Role-based access, private client info", "Custom grant & impact reports"]
+    outcome: "Designed together with your team."
 
 partnership:
-  title: "A Win-Win Partnership"
-  lead: "Shoreline Connect links student learning with the real needs of a nonprofit in our community."
-  center: "Together We Help"
+  title: "A Partnership That Helps Both Sides"
+  lead: "OCS-in-a-Kit connects student learning with what real organizations in our community need."
+  center: "Together We Grow"
   sides:
     - heading: "Students Gain"
       icon: "🎓"
-      items: ["Real full-stack experience", "A real nonprofit client", "A portfolio-ready project"]
+      items: ["A real customer", "Real problems to solve", "Software that matters"]
     - heading: "Shoreline Gains"
       icon: "🏠"
-      items: ["A modern, mobile-friendly site", "Volunteer & donor tools", "Data on community impact"]
+      items: ["New ideas & technology", "Extra development time", "No vendor lock-in"]
 
-footer: "A stronger Central Beach community through technology, service and partnership."
+footer: "Open foundation, practical solutions, room to grow: people helping people, with technology behind them."

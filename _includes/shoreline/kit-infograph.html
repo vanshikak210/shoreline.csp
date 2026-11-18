@@ -1,5 +1,5 @@
 {%- comment -%}
-  "Shoreline Connect" infographic: five project stages and the win-win partnership.
+  "Shoreline Connect" infographic: what we heard, the project steps, and the partnership.
   Content: _data/shoreline_kit.yml. Styles: _sass/capstone/shoreline.scss (.sl-kit).
   Built from OCS grids so it follows the site theme like other capstone infographs.
 {%- endcomment -%}
@@ -14,13 +14,27 @@
       <small>Community Services</small>
     </div>
     <div class="sl-kit__title">
-      <h2>{{ kit.title }}</h2>
+      <h2>{{ kit.title }}{% if kit.subtitle %} <span>{{ kit.subtitle }}</span>{% endif %}</h2>
       <p>{{ kit.tagline }}</p>
     </div>
     <p class="sl-kit__summary">{{ kit.summary }}</p>
   </div>
 
-  <ol class="ocs__grid ocs__grid--card cols-5 sl-kit__stages">
+  {%- if kit.heard %}
+  <div class="sl-kit__heard">
+    <h3 class="sl-kit__heard-title">{{ kit.heard.title }}</h3>
+    <ul class="ocs__grid ocs__grid--card cols-4 sl-kit__heard-grid">
+      {%- for item in kit.heard.items %}
+      <li class="ocs__grid-cell sl-kit__heard-item">
+        <span class="sl-kit__heard-icon" aria-hidden="true">{{ item.icon }}</span>
+        <div><strong>{{ item.heading }}</strong><p>{{ item.text }}</p></div>
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+  {%- endif %}
+
+  <ol class="ocs__grid ocs__grid--card cols-{{ kit.stages.size }} sl-kit__stages" style="--kit-cols: {{ kit.stages.size }}">
     {%- for stage in kit.stages %}
     <li class="ocs__grid-cell sl-kit__stage sl-kit__stage--{{ stage.tone }}">
       <div class="sl-kit__stage-head">
@@ -28,7 +42,11 @@
         <em>{{ stage.subtitle }}</em>
       </div>
       <div class="sl-kit__icon" aria-hidden="true">{{ stage.icon }}</div>
+      {%- if stage.badge %}
+      <span class="ocs__status-pill sl-kit__status">{{ stage.badge }}</span>
+      {%- elsif stage.status %}
       <span class="ocs__status-pill sl-kit__status">{% if stage.status == "live" %}Live now{% else %}Coming next{% endif %}</span>
+      {%- endif %}
       <ul class="sl-kit__checks">
         {%- for item in stage.items %}
         <li>{{ item }}</li>
