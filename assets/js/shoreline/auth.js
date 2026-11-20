@@ -15,7 +15,7 @@ import { baseurl, pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/a
 const SURVEY_KEY = 'shoreline.survey';
 
 // Which Flask backend to use: pythonURI from config.js. On the team's github.io site that
-// is Shoreline's own backend (shoreline.opencodingsociety.com, Docker on the OCS server);
+// is Shoreline's own backend (shoreline-api.opencodingsociety.com, Docker on the OCS server);
 // on localhost it's your local Flask; anywhere else it's the OCS class backend.
 export const apiURI = pythonURI;
 

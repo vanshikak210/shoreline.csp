@@ -10,9 +10,9 @@ export const baseurl = "{{ site.baseurl }}";
 export var pythonURI;
 if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
     pythonURI = "http://localhost:8587";  // Same URI for localhost or 127.0.0.1
-} else if (location.hostname === "vanshikak210.github.io") {
+} else if (location.hostname === "vanshikak210.github.io" || location.hostname === "shoreline.opencodingsociety.com") {
     // Shoreline's own Flask on the OCS server (Docker, port 8550, nginx + certbot).
-    pythonURI = "https://shoreline.opencodingsociety.com";
+    pythonURI = "https://shoreline-api.opencodingsociety.com";
 } else {
     pythonURI = "https://flask.opencodingsociety.com";
 }
