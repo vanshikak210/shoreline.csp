@@ -1,0 +1,97 @@
+// Shoreline account pages: account tabs, admin analytics bars, and the looks chosen on
+// /shoreline/preferences. Imported at the end of shoreline.scss, so its variables and
+// the sl-text-color mixin are in scope.
+
+// "Admin" label under the name in the avatar menu (assets/js/shoreline/auth.js).
+.sl-avatar__role {
+  @include sl-text-color(#6b7280);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+// Profile / Preferences / Analytics tab bar (_includes/shoreline/account-tabs.html).
+.shoreline-site .sl-account-tabs-section { padding: 24px 0 0; }
+
+.sl-account-tabs {
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+// Preferences: text-size buttons wrap on phones; toggles stack under them.
+.sl-form #prefTextSize { gap: 8px; margin-bottom: 0.75rem; }
+.sl-form .ocs__toggle { display: flex; margin: 0.5rem 0; }
+
+// ── Admin analytics (/shoreline/analytics) ──
+.sl-analytics-stats { width: 100%; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+
+.sl-analytics-grid {
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  text-align: left;
+
+  h2 { font-size: 1.4rem; }
+
+  @media (max-width: 700px) { grid-template-columns: 1fr; }
+}
+
+// Horizontal bar chart: label, track, value. Bar widths are set inline from the data.
+.sl-bars {
+  display: grid;
+  gap: 10px;
+
+  &__row {
+    display: grid;
+    grid-template-columns: minmax(90px, 35%) 1fr auto;
+    align-items: center;
+    gap: 10px;
+  }
+  &__label { @include sl-text-color($sl-ink); font-size: 0.95rem; overflow-wrap: anywhere; }
+  &__track {
+    display: block;
+    height: 12px;
+    border-radius: 6px;
+    background: rgba(67, 192, 212, 0.15);
+    overflow: hidden;
+  }
+  &__fill {
+    display: block;
+    height: 100%;
+    border-radius: 6px;
+    background: linear-gradient(90deg, $sl-teal, $sl-teal-deep);
+  }
+  &__value { @include sl-text-color($sl-navy); font-weight: 600; font-size: 0.9rem; white-space: nowrap; }
+}
+
+// ── Looks chosen on /shoreline/preferences (preferences-store.js sets these on <html>) ──
+html[data-sl-text-size="large"] { font-size: 112.5%; }
+html[data-sl-text-size="xlarge"] { font-size: 125%; }
+html[data-sl-text-size="large"] .shoreline-site { font-size: 1.125em; }
+html[data-sl-text-size="xlarge"] .shoreline-site { font-size: 1.25em; }
+
+html[data-sl-contrast="high"] .shoreline-site {
+  @include sl-text-color(#000);
+
+  .sl-section:not(.sl-section--teal):not(.sl-section--green):not(.sl-section--emergency) {
+    background: #fff;
+
+    p, li, td, label, small, .sl-note, .sl-bars__label { @include sl-text-color(#000); }
+  }
+  // White text needs a darker backdrop than teal to stay readable.
+  .sl-section--teal { background: $sl-navy; }
+  .sl-note { font-style: normal; }
+  a:not(.ocs__btn) { text-decoration: underline; }
+  .ocs__btn, .ocs__input { border-width: 2px; }
+  .sl-bars__track { background: #d1d5db; }
+  .sl-bars__fill { background: $sl-navy; }
+  :focus-visible { outline: 3px solid #000; outline-offset: 2px; }
+}
+
+html[data-sl-motion="reduce"] .shoreline-site {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

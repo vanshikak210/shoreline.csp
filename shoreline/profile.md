@@ -19,6 +19,8 @@ custom_header: true
     </div>
 </section>
 
+{% include shoreline/account-tabs.html active="profile" %}
+
 <section class="sl-section" id="profileSignedOut" hidden>
     <div class="sl-container">
         <h2>Sign in to see your profile</h2>

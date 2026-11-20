@@ -930,3 +930,6 @@ $sl-kit-tones: (
     &__heard-grid { grid-template-columns: 1fr; }
   }
 }
+
+// Account pages and preference looks (Profile / Preferences / Analytics).
+@import "shoreline-account";

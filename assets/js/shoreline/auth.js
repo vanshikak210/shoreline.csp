@@ -11,6 +11,7 @@
 // what kept bouncing the Shoreline header back there.
 
 import { baseurl, pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
+import { accountTabs, isShorelineAdmin } from '{{ site.baseurl }}/assets/js/shoreline/account-model.js';
 
 const SURVEY_KEY = 'shoreline.survey';
 
@@ -159,6 +160,12 @@ export async function renderShorelineAuth(el) {
         ? `<img class="sl-avatar__img" src="${user.pfp.startsWith('data:') || user.pfp.startsWith('http') ? user.pfp : `${apiURI}/${user.pfp}`}" alt="">`
         : `<abbr class="ocs__avatar" title="${name}">${initials(user.name)}</abbr>`;
 
+    // Profile and Preferences for everyone; Analytics too for admins (account-model.js).
+    const tabLinks = accountTabs(user)
+        .map(tab => `<a class="ocs__btn small accent" href="${baseurl}${tab.path}">${tab.label}</a>`)
+        .join('');
+    const adminBadge = isShorelineAdmin(user) ? '<small class="sl-avatar__role">Admin</small>' : '';
+
     el.innerHTML = `
         <div class="sl-avatar">
             <button type="button" class="sl-avatar__btn" aria-haspopup="true" aria-expanded="false" aria-label="Account menu for ${name}">
@@ -166,7 +173,8 @@ export async function renderShorelineAuth(el) {
             </button>
             <div class="sl-avatar__menu ocs__links" hidden>
                 <strong class="sl-avatar__name">${name}</strong>
-                <a class="ocs__btn small accent" href="${baseurl}/shoreline/profile">Profile</a>
+                ${adminBadge}
+                ${tabLinks}
                 <button type="button" class="ocs__btn small alert-red sl-avatar__logout">Log out</button>
             </div>
         </div>`;

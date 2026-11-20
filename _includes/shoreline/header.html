@@ -27,5 +27,8 @@
 </header>
 <script type="module">
 import { renderShorelineAuth } from '{{ site.baseurl }}/assets/js/shoreline/auth.js';
+import { applySavedPreferences } from '{{ site.baseurl }}/assets/js/shoreline/preferences-store.js';
+// Language, text size, contrast and motion chosen on /shoreline/preferences.
+applySavedPreferences();
 renderShorelineAuth(document.getElementById('shorelineAuthArea'));
 </script>

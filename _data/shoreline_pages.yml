@@ -146,3 +146,14 @@ profile:
     - { value: "volunteer", label: "Volunteer" }
     - { value: "donate", label: "Donate" }
     - { value: "none", label: "Just browsing" }
+
+# /shoreline/preferences — every signed-in account (assets/js/shoreline/preferences-model.js
+# holds the option lists, so the saved values and the form can't drift apart).
+preferences:
+  title: "Preferences"
+  lead: "Pick your language and how the site looks. Saved on this device."
+
+# /shoreline/analytics — admin accounts only (Flask role "Admin").
+analytics:
+  title: "Community Analytics"
+  lead: "How the Shoreline community is signing up, helping and volunteering."
