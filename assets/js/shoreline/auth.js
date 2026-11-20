@@ -14,19 +14,14 @@ import { baseurl, pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/a
 
 const SURVEY_KEY = 'shoreline.survey';
 
-// Which Flask backend to use. On OCS domains (and localhost) it's the class backend
-// from config.js, so people sign in with their Open Coding Society account. The team's
-// own github.io site can't use that backend (OCS only accepts opencodingsociety.com
-// origins), so there it uses the Shoreline backend on Render, reached through a Vercel
-// GitHub Codespace (shoreline-flask/.devcontainer) because school Wi-Fi blocks onrender.com and vercel.app.
-const SHORELINE_BACKENDS = {
-    'vanshikak210.github.io': 'https://fluffy-space-dollop-5v464x4v5q97fp6rv-8587.app.github.dev',
-};
-export const apiURI = SHORELINE_BACKENDS[location.hostname] || pythonURI;
+// Which Flask backend to use: pythonURI from config.js. On the team's github.io site that
+// is Shoreline's own backend (shoreline.opencodingsociety.com, Docker on the OCS server);
+// on localhost it's your local Flask; anywhere else it's the OCS class backend.
+export const apiURI = pythonURI;
 
-// The OCS class backend doesn't have the /api/shoreline routes (signup, survey) yet,
-// so on OCS the page uses OCS signup and keeps the survey answer on the device.
-export const usesOcsBackend = apiURI.includes('opencodingsociety.com');
+// The OCS class backend doesn't have the /api/shoreline routes (signup, survey),
+// so there the page uses OCS signup and keeps the survey answer on the device.
+export const usesOcsBackend = apiURI === 'https://flask.opencodingsociety.com';
 
 async function readJson(response) {
     const raw = await response.text();
