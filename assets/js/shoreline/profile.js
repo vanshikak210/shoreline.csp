@@ -121,7 +121,7 @@ function renderCard(profile, uid) {
     $('cardAvatar').title = profile.name || uid;
     $('cardName').textContent = profile.name || uid;
     $('cardMeta').textContent = [`@${uid}`, profile.neighborhood, profile.availability].filter(Boolean).join(' · ');
-    $('cardBio').textContent = profile.bio || 'No bio yet. Click Edit Profile to add one.';
+    $('cardBio').textContent = profile.bio || 'No bio yet. Add one under Details.';
     const pills = $('cardInterests');
     pills.replaceChildren(...(profile.interests || []).map(interest => {
         const pill = document.createElement('span');
@@ -201,18 +201,6 @@ export async function initProfilePage() {
         renderHours(profile, deleteEntry);
     };
 
-    const setEditing = editing => {
-        $('profileEditSection').hidden = !editing;
-        $('editProfileBtn').hidden = editing;
-        if (editing) {
-            fillForm(profile);
-            $('profileStatus').textContent = '';
-            $('profileEditSection').scrollIntoView({ behavior: 'smooth' });
-        }
-    };
-    $('editProfileBtn').addEventListener('click', () => setEditing(true));
-    $('cancelEditBtn').addEventListener('click', () => setEditing(false));
-
     async function deleteEntry(id, btn) {
         btn.disabled = true;
         try {
@@ -228,11 +216,10 @@ export async function initProfilePage() {
     $('hoursDate').max = today();
     $('profileApp').hidden = false;
 
-    // First visit: open the form so the user creates their profile right away.
-    if (isNewProfile(profile)) {
-        $('profileEditTitle').textContent = 'Create Your Profile';
-        setEditing(true);
-    }
+    // The Details form is always open (as on the OCS /profile page). It is filled here and
+    // after each save, not on every redraw, so logging hours keeps unsaved edits.
+    fillForm(profile);
+    if (isNewProfile(profile)) $('profileEditTitle').textContent = 'Create Your Profile';
 
     $('profileForm').addEventListener('submit', async event => {
         event.preventDefault();
@@ -251,8 +238,9 @@ export async function initProfilePage() {
         status.textContent = 'Saving...';
         try {
             show(await store.save(fields));
-            $('profileEditTitle').textContent = 'Edit My Profile';
-            setEditing(false);
+            fillForm(profile);
+            $('profileEditTitle').textContent = 'Details';
+            status.textContent = 'Saved.';
         } catch (err) {
             status.textContent = err.message;
         } finally {

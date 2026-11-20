@@ -46,7 +46,7 @@ export async function initPreferencesPage() {
         $('preferencesSignedOut').hidden = false;
         return;
     }
-    $('preferencesApp').hidden = false;
+    $('preferencesForm').hidden = false;
 
     buildLanguageOptions($('prefLanguage'));
     buildTextSizeButtons($('prefTextSize'));

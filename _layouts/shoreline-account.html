@@ -1,0 +1,38 @@
+---
+layout: opencs
+---
+{%- comment -%}
+  Shoreline account pages (Profile, Preferences, Analytics), laid out like the OCS
+  /profile page: a left sidebar menu beside a column of ocs__card sections, inside the
+  Shoreline header and footer. Pages set `account_tab` (profile, preferences or analytics)
+  to highlight their sidebar entry. The menu comes from accountTabs() in
+  assets/js/shoreline/account-model.js, so admins also see Analytics.
+{%- endcomment -%}
+<div class="shoreline-site sl-account-site">
+
+{% include shoreline/header.html %}
+
+<div class="sl-account">
+    <aside class="sl-account__sidebar">
+        <p class="sl-account__menu-label">Account</p>
+        <nav class="sl-account__nav" id="shorelineAccountNav" aria-label="Account"></nav>
+    </aside>
+
+    <div class="sl-account__main">
+        {{ content }}
+    </div>
+</div>
+
+{% include shoreline/footer.html %}
+
+</div>
+
+<script type="module">
+import { getShorelineUser } from '{{ site.baseurl }}/assets/js/shoreline/auth.js';
+import { renderAccountNav } from '{{ site.baseurl }}/assets/js/shoreline/account-tabs.js';
+const nav = document.getElementById('shorelineAccountNav');
+const active = {{ page.account_tab | jsonify }};
+// Draw the everyone-menu right away, then again once we know whether this is an admin.
+renderAccountNav(nav, null, active);
+getShorelineUser().then(user => renderAccountNav(nav, user, active));
+</script>
