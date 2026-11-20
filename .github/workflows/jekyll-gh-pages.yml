@@ -98,6 +98,9 @@ jobs:
             BASEURL=""
           elif [[ "${{ github.repository }}" = "Open-Coding-Society/pages" ]]; then
             BASEURL=""
+          elif [[ "${{ github.repository }}" = "vanshikak210/shoreline.csp" ]]; then
+            # Custom domain https://shoreline.opencodingsociety.com serves the site at the root.
+            BASEURL=""
           else
             BASEURL="/$NAME"
           fi
