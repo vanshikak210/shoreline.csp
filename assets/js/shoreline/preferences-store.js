@@ -1,13 +1,18 @@
 // Saves Shoreline preferences on this device and applies them to the page.
 //
-// Kept separate from the site-wide OCS theme ('sitePreferences'): Shoreline pins its own
-// palette, so it stores only its own keys here and never changes OCS pages.
+// Kept separate from the site-wide OCS theme ('sitePreferences'): Shoreline themes only
+// change Shoreline pages, so it stores only its own keys here and never changes OCS pages.
 // Language goes through window.SitePreferences.applyLanguage (assets/js/user-preferences.js,
 // loaded by every layout), which drives Google Translate.
 
-import { normalizePreferences, preferenceAttributes } from './preferences-model.js';
+import { normalizePreferences, preferenceAttributes, translateCookieDomains } from './preferences-model.js';
+import { themeVariables, fontById } from './theme-model.js';
+import { mountReadAloud } from './read-aloud.js';
 
 const STORAGE_KEY = 'shoreline.preferences';
+// The theme's CSS variables, cached so the inline script in _includes/shoreline/header.html
+// can set them before the page paints (modules run too late to avoid a flash of white).
+const THEME_CACHE_KEY = 'shoreline.themeVariables';
 
 /** Saved preferences, or the defaults when none are saved or storage is unavailable. */
 export function loadPreferences() {
@@ -23,15 +28,33 @@ export function loadPreferences() {
 export function savePreferences(preferences) {
     const prefs = normalizePreferences(preferences);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+    localStorage.setItem(THEME_CACHE_KEY, JSON.stringify(themeVariables(prefs)));
     return prefs;
 }
 
-/** Set or clear the <html> attributes the Shoreline styles read. */
+/** Load a Google Fonts family once per page. */
+function loadFont(fontId) {
+    const { id, google } = fontById(fontId);
+    if (!google || document.getElementById(`sl-font-${id}`)) return;
+    const link = document.createElement('link');
+    link.id = `sl-font-${id}`;
+    link.rel = 'stylesheet';
+    link.href = `https://fonts.googleapis.com/css2?family=${google}&display=swap`;
+    document.head.appendChild(link);
+}
+
+/** Set or clear the <html> attributes and theme variables the Shoreline styles read. */
 export function applyLook(preferences, root = document.documentElement) {
-    Object.entries(preferenceAttributes(preferences)).forEach(([name, value]) => {
+    const prefs = normalizePreferences(preferences);
+    Object.entries(preferenceAttributes(prefs)).forEach(([name, value]) => {
         if (value === null) root.removeAttribute(name);
         else root.setAttribute(name, value);
     });
+    Object.entries(themeVariables(prefs)).forEach(([name, value]) => {
+        if (value === null) root.style.removeProperty(name);
+        else root.style.setProperty(name, value);
+    });
+    loadFont(prefs.font);
 }
 
 /**
@@ -48,10 +71,36 @@ export function applyLanguage(language) {
     if (current !== language) api.applyLanguage(language);
 }
 
+/** Remove every googtrans cookie this page can see, including ones on parent domains. */
+function clearTranslateCookies() {
+    const expired = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+    document.cookie = expired;
+    translateCookieDomains(window.location.hostname).forEach(domain => {
+        document.cookie = `${expired}; domain=${domain}`;
+        document.cookie = `${expired}; domain=.${domain}`;
+    });
+}
+
+/**
+ * Switch to a new language by reloading the page. Google Translate only reads its
+ * 'googtrans' cookie when it starts, and its language menu is never rendered on these
+ * pages, so changing language in place is unreliable (it stuck on the first language).
+ * After the reload, applySavedPreferences translates the page from the saved setting.
+ */
+export function reloadInLanguage(language) {
+    clearTranslateCookies();
+    if (language) document.cookie = `googtrans=/en/${language}; path=/`;
+    window.location.reload();
+}
+
 /** Apply everything saved; runs on every Shoreline page from _includes/shoreline/header.html. */
 export function applySavedPreferences() {
     const prefs = loadPreferences();
     applyLook(prefs);
+    // A leftover cookie (an old choice, or one an OCS site set on a parent domain)
+    // would make Google Translate ignore the saved language, so start clean.
+    clearTranslateCookies();
     if (prefs.language) applyLanguage(prefs.language);
+    mountReadAloud(prefs.readAloud);
     return prefs;
 }

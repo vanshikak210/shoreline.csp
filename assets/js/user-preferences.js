@@ -61,6 +61,7 @@
     'ko': { name: 'Korean', code: 'ko' },
     'ar': { name: 'Arabic', code: 'ar' },
     'hi': { name: 'Hindi', code: 'hi' },
+    'te': { name: 'Telugu', code: 'te' },
     'vi': { name: 'Vietnamese', code: 'vi' },
     'th': { name: 'Thai', code: 'th' },
     'nl': { name: 'Dutch', code: 'nl' },

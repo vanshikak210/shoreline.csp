@@ -4,7 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import { isShorelineAdmin, accountType, accountTabs } from '../assets/js/shoreline/account-model.js';
-import { normalizePreferences, preferenceAttributes, DEFAULT_PREFERENCES } from '../assets/js/shoreline/preferences-model.js';
+import { normalizePreferences, preferenceAttributes, DEFAULT_PREFERENCES, translateCookieDomains } from '../assets/js/shoreline/preferences-model.js';
 import { toBars, surveyBreakdown, signupsByMonth, headlineStats, roundHours } from '../assets/js/shoreline/analytics-model.js';
 
 const tabIds = user => accountTabs(user).map(tab => tab.id);
@@ -45,7 +45,12 @@ test('missing or tampered saved preferences fall back to defaults', () => {
 });
 
 test('valid preferences are kept', () => {
-    const prefs = { language: 'es', textSize: 'xlarge', highContrast: true, reduceMotion: true };
+    const prefs = {
+        language: 'es', textSize: 'xlarge', highContrast: true, reduceMotion: true,
+        theme: 'custom', customColors: { page: '#101820', text: '#f0f0f0', accent: '#fcb900' }, font: 'atkinson',
+        savedThemes: [{ name: 'Night', colors: { page: '#101820', text: '#f0f0f0', accent: '#fcb900' }, font: 'atkinson' }],
+        readAloud: { enabled: true, voice: 'Samantha', rate: 1.2, pitch: 0.9 },
+    };
     assert.deepEqual(normalizePreferences({ ...prefs, extra: 'dropped' }), prefs);
 });
 
@@ -96,4 +101,86 @@ test('headline stats read the payload and round hours', () => {
         { members: 5, totalHours: 12.5, shifts: 6, volunteers: 3 });
     assert.deepEqual(headlineStats({}), { members: 0, totalHours: 0, shifts: 0, volunteers: 0 });
     assert.equal(roundHours(-3), 0);
+});
+
+test('translate cookies are cleared on the host and every parent domain', () => {
+    assert.deepEqual(translateCookieDomains('shoreline.opencodingsociety.com'),
+        ['shoreline.opencodingsociety.com', 'opencodingsociety.com']);
+    assert.deepEqual(translateCookieDomains('localhost'), []);
+    assert.deepEqual(translateCookieDomains('127.0.0.1'), []);
+    assert.deepEqual(translateCookieDomains(''), []);
+});
+
+// ── Themes, fonts and read-aloud (theme-model.js, read-aloud-model.js) ──
+import { THEMES, themeVariables, customPalette, normalizeSavedThemes, mixColors, isDarkColor, SAVED_THEME_LIMIT } from '../assets/js/shoreline/theme-model.js';
+import { speechChunks, pickVoice } from '../assets/js/shoreline/read-aloud-model.js';
+
+test('Shoreline theme and font leave every variable to the stylesheet', () => {
+    const variables = themeVariables(normalizePreferences(null));
+    assert.ok(Object.values(variables).every(value => value === null));
+});
+
+test('a preset theme sets its palette, and dark presets ask for dark form controls', () => {
+    const variables = themeVariables(normalizePreferences({ theme: 'midnight' }));
+    const midnight = THEMES.find(theme => theme.id === 'midnight').palette;
+    assert.equal(variables['--sl-page'], midnight.page);
+    assert.equal(variables['--sl-accent'], midnight.accent);
+    assert.equal(variables['color-scheme'], 'dark');
+    assert.equal(themeVariables(normalizePreferences({ theme: 'sand' }))['color-scheme'], null);
+});
+
+test('high contrast overrides the theme colors but keeps the chosen font', () => {
+    const variables = themeVariables(normalizePreferences({ theme: 'midnight', highContrast: true, font: 'atkinson' }));
+    assert.equal(variables['--sl-page'], null);
+    assert.match(variables['--sl-body-font'], /Atkinson/);
+});
+
+test('custom themes build a full palette from three picked colors', () => {
+    const palette = customPalette({ page: '#000000', text: '#ffffff', accent: '#ff0000' });
+    assert.equal(palette.page, '#000000');
+    assert.equal(palette.accent, '#ff0000');
+    assert.ok(isDarkColor(palette.page));
+    assert.ok(Object.values(palette).every(value => /^#[0-9a-f]{6}$/.test(value)));
+    assert.equal(themeVariables(normalizePreferences({ theme: 'custom', customColors: palette }))['--sl-page'], '#000000');
+});
+
+test('bad saved colors, themes and fonts fall back to Shoreline defaults', () => {
+    const prefs = normalizePreferences({ theme: 'neon', font: 'comic', customColors: { page: 'red', text: '#12345' } });
+    assert.equal(prefs.theme, 'shoreline');
+    assert.equal(prefs.font, 'shoreline');
+    assert.deepEqual(prefs.customColors, DEFAULT_PREFERENCES.customColors);
+});
+
+test('saved themes need a name, drop duplicate names and stop at the limit', () => {
+    const many = Array.from({ length: 12 }, (_, i) => ({ name: `Theme ${i}`, colors: {}, font: 'serif' }));
+    assert.equal(normalizeSavedThemes(many).length, SAVED_THEME_LIMIT);
+    const cleaned = normalizeSavedThemes([{ name: ' Calm ' }, { name: 'calm' }, { name: '' }, null, 'x']);
+    assert.deepEqual(cleaned.map(theme => theme.name), ['Calm']);
+    assert.equal(cleaned[0].font, 'shoreline');
+});
+
+test('mixing colors blends each channel', () => {
+    assert.equal(mixColors('#000000', '#ffffff', 0.5), '#808080');
+    assert.equal(mixColors('#123456', '#abcdef', 0), '#123456');
+});
+
+test('read-aloud settings are clamped to usable speeds', () => {
+    const prefs = normalizePreferences({ readAloud: { enabled: true, rate: 9, pitch: 'loud', voice: 42 } });
+    assert.deepEqual(prefs.readAloud, { enabled: true, voice: '', rate: 2, pitch: 1 });
+});
+
+test('speech is split at sentence ends into short chunks', () => {
+    const text = 'First sentence here. Second one! ' + 'word '.repeat(80);
+    const chunks = speechChunks(text, 60);
+    assert.ok(chunks.length > 2);
+    assert.ok(chunks.every(chunk => chunk.length <= 60));
+    assert.equal(chunks[0], 'First sentence here. Second one!');
+    assert.deepEqual(speechChunks('   '), []);
+});
+
+test('a saved voice is used only when this device has it', () => {
+    const voices = [{ name: 'Samantha' }, { name: 'Daniel' }];
+    assert.equal(pickVoice(voices, 'Daniel').name, 'Daniel');
+    assert.equal(pickVoice(voices, 'Missing'), null);
+    assert.equal(pickVoice(voices, ''), null);
 });

@@ -3,19 +3,28 @@
 // variables to Shoreline's colors (sampled from shorelinecs.org) and lays out the
 // full-width page sections. Everything is scoped under .shoreline-site.
 
-$sl-teal: #43c0d4;
+// Theme tokens: Shoreline pages set --sl-* on <html> from the theme picked on
+// /shoreline/preferences (theme-model.js); the fallbacks are Shoreline's own look.
+// $sl-navy stays fixed: it is the dark banner color behind white text in every theme,
+// while $sl-heading is the heading text color that themes change.
+$sl-teal: var(--sl-accent, #43c0d4);
 $sl-green: #badc8f;
 $sl-navy: #1c244b;
-$sl-text: #3c3c3c;
-$sl-ink: #262b36;         // darker body text for lists and steps
+$sl-heading: var(--sl-heading, #1c244b);
+$sl-text: var(--sl-text, #3c3c3c);
+$sl-ink: var(--sl-ink, #262b36);         // darker body text for lists and steps
+$sl-page: var(--sl-page, #fff);          // page background; section fades end in it
+$sl-surface: var(--sl-surface, #fff);    // cards, menus, sidebar
+$sl-muted: var(--sl-muted, #6b7280);
+$sl-border: var(--sl-border, #e3e8ea);
 $sl-red: #cf2e2e;
 $sl-footer: #2a3235;
-$sl-teal-deep: #2ea6bd;   // darker end of the teal gradient
+$sl-teal-deep: var(--sl-accent-deep, #2ea6bd);   // darker end of the teal gradient
 $sl-green-light: #d4ebb4; // lighter start of the green gradient
-$sl-mist: #eef8fa;        // faint teal tint for white sections
+$sl-mist: var(--sl-mist, #eef8fa);        // faint teal tint for white sections
 $sl-fade: 48px;           // height of the fade into white at section edges
-$sl-heading-font: "Asap", "Helvetica Neue", Arial, sans-serif;
-$sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
+$sl-heading-font: var(--sl-heading-font, "Asap", "Helvetica Neue", Arial, sans-serif);
+$sl-body-font: var(--sl-body-font, "Roboto", "Helvetica Neue", Arial, sans-serif);
 
 // The OCS user theme forces text and link colors with !important, reading them from
 // --pref-text-color and --pref-accent-color. Setting those variables (alongside color)
@@ -33,16 +42,16 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
 
 .shoreline-site {
   // OCS theme variables, re-pointed to Shoreline's palette.
-  --pref-bg-color: #fff;
+  --pref-bg-color: #{$sl-page};
   --pref-accent-color: #{$sl-teal};
-  --panel: #fff;
-  --panel-mid: #f6fbfc;
-  --ui-border: #e3e8ea;
+  --panel: #{$sl-surface};
+  --panel-mid: #{$sl-mist};
+  --ui-border: #{$sl-border};
   --red: #{$sl-red};
 
   width: 100vw;
   margin-left: calc(50% - 50vw);
-  background: #fff;
+  background: $sl-page;
   @include sl-text-color($sl-text);
   font-family: $sl-body-font;
   line-height: 1.6;
@@ -53,7 +62,7 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
     text-align: inherit;
     text-shadow: none;
     font-family: $sl-heading-font;
-    @include sl-text-color($sl-navy);
+    @include sl-text-color($sl-heading);
     margin: 0 0 0.5em;
     line-height: 1.2;
   }
@@ -90,8 +99,8 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
 
 // ── Header ──
 .sl-header {
-  background: #fff;
-  border-bottom: 1px solid #eee;
+  background: $sl-page;
+  border-bottom: 1px solid $sl-border;
   position: sticky;
   top: 0;
   z-index: 10;
@@ -160,12 +169,12 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
   // Soft Shoreline gradients that fade into white at the edges, so sections blend
   // into each other instead of stacking as flat color blocks. The fades stay inside
   // the 64px padding, so text always sits on the solid part.
-  background: linear-gradient(180deg, #fff 0%, $sl-mist 100%);
+  background: linear-gradient(180deg, #{$sl-page} 0%, #{$sl-mist} 100%);
 
   &--teal {
     background:
       radial-gradient(ellipse at 15% 30%, rgba(255, 255, 255, 0.18), transparent 55%),
-      linear-gradient(180deg, #fff 0, $sl-teal $sl-fade, $sl-teal-deep calc(100% - #{$sl-fade}), #fff 100%);
+      linear-gradient(180deg, #{$sl-page} 0, #{$sl-teal} $sl-fade, #{$sl-teal-deep} calc(100% - #{$sl-fade}), #{$sl-page} 100%);
   }
   &--teal, &--teal h2, &--teal p { @include sl-text-color(#fff); }
   &--teal &__lead { @include sl-text-color($sl-navy); font-weight: 600; font-size: 1.15rem; }
@@ -173,14 +182,17 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
   &--green {
     background:
       radial-gradient(ellipse at 85% 20%, rgba(255, 255, 255, 0.35), transparent 55%),
-      linear-gradient(180deg, #fff 0, $sl-green-light $sl-fade, $sl-green calc(100% - #{$sl-fade}), #fff 100%);
+      linear-gradient(180deg, #{$sl-page} 0, $sl-green-light $sl-fade, $sl-green calc(100% - #{$sl-fade}), #{$sl-page} 100%);
   }
   &--green &__intro { @include sl-text-color($sl-navy); }
+  // The green band stays light in every theme, so its own text stays dark.
+  &--green > .sl-container > h2 { @include sl-text-color($sl-navy); }
   &--green .ocs__grid-cell { text-align: left; }
 
   // Red tone so the OCS header cell and borders read as urgent.
   &--emergency {
-    background: linear-gradient(180deg, #fff 0, #fff5f5 $sl-fade, #fff5f5 100%);
+    $sl-alert-tint: color-mix(in srgb, #{$sl-red} 6%, #{$sl-page});
+    background: linear-gradient(180deg, #{$sl-page} 0, $sl-alert-tint $sl-fade, $sl-alert-tint 100%);
     --pref-accent-color: #{$sl-red};
   }
 }
@@ -189,7 +201,7 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
 .sl-hero + .sl-section--teal {
   background:
     radial-gradient(ellipse at 15% 30%, rgba(255, 255, 255, 0.18), transparent 55%),
-    linear-gradient(180deg, $sl-teal 0, $sl-teal-deep calc(100% - #{$sl-fade}), #fff 100%);
+    linear-gradient(180deg, #{$sl-teal} 0, #{$sl-teal-deep} calc(100% - #{$sl-fade}), #{$sl-page} 100%);
 }
 
 // ── Section pages (_includes/shoreline/page.html) ──
@@ -204,7 +216,7 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
 
   // The OCS theme recolors every li to its (light) text color; set Shoreline's dark text.
   li { margin: 0.5em 0; @include sl-text-color($sl-ink); }
-  li::marker { color: $sl-navy; }
+  li::marker { color: $sl-heading; }
 }
 
 .sl-section--teal li { @include sl-text-color(#fff); }
@@ -214,14 +226,14 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
 .sl-section--teal .ocs__grid-cell {
   @include sl-text-color($sl-text);
 
-  h3 { @include sl-text-color($sl-navy); }
+  h3 { @include sl-text-color($sl-heading); }
   p, li { @include sl-text-color($sl-text); }
 }
 
 .sl-steps strong {
   display: block;
   font-family: $sl-heading-font;
-  @include sl-text-color($sl-navy);
+  @include sl-text-color($sl-heading);
 }
 
 // Profile page forms: left-aligned fields inside the centered sections.
@@ -270,7 +282,8 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
 .sl-highlight {
   margin-top: auto;
   padding-top: 0.75rem;
-  border-top: 2px solid rgba($sl-teal, 0.35);
+  // color-mix, not rgba(): $sl-teal is a theme var(), which Sass color functions cannot read.
+  border-top: 2px solid color-mix(in srgb, #{$sl-teal} 35%, transparent);
   font-size: 0.95rem;
   @include sl-text-color($sl-text);
 
@@ -312,7 +325,7 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
 }
 
 .sl-note {
-  @include sl-text-color(#6b7280);
+  @include sl-text-color($sl-muted);
   font-size: 0.9rem;
   font-style: italic;
 }
@@ -342,8 +355,8 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
     min-width: 180px;
     flex-direction: column;
     align-items: stretch;
-    background: #fff;
-    border: 1px solid #e5e7eb;
+    background: $sl-surface;
+    border: 1px solid $sl-border;
     border-radius: 10px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     padding: 10px;
@@ -355,7 +368,7 @@ $sl-body-font: "Roboto", "Helvetica Neue", Arial, sans-serif;
   }
   &__name {
     font-family: $sl-heading-font;
-    @include sl-text-color($sl-navy);
+    @include sl-text-color($sl-heading);
   }
 }
 
@@ -387,7 +400,7 @@ $sl-wave-footer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
 
 // Header: frosted glass over the page as it scrolls under.
 .sl-header {
-  background: rgba(255, 255, 255, 0.85);
+  background: color-mix(in srgb, #{$sl-page} 85%, transparent);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(28, 36, 75, 0.06);
@@ -431,8 +444,9 @@ $sl-wave-footer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
   h1 { text-shadow: 0 4px 24px rgba(10, 20, 50, 0.35); letter-spacing: -0.01em; }
   p { text-shadow: 0 2px 12px rgba(10, 20, 50, 0.35); }
 
-  // Three wave layers drifting at different speeds; the front one is white so the
-  // hero rolls straight into the page below.
+  // Three wave layers drifting at different speeds; the front one is solid so the
+  // hero rolls straight into the page below. The SVGs are masks over the page color,
+  // so the waves match whichever theme is chosen.
   &::after {
     content: "";
     position: absolute;
@@ -440,10 +454,15 @@ $sl-wave-footer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
     right: 0;
     bottom: -1px;
     height: 110px;
-    background-image: $sl-wave-back, $sl-wave-mid, $sl-wave-front;
-    background-repeat: repeat-x;
-    background-size: 1440px 100px, 1440px 80px, 1440px 56px;
-    background-position: 0 100%, 300px 100%, 0 100%;
+    background: $sl-page;
+    -webkit-mask-image: $sl-wave-back, $sl-wave-mid, $sl-wave-front;
+    mask-image: $sl-wave-back, $sl-wave-mid, $sl-wave-front;
+    -webkit-mask-repeat: repeat-x;
+    mask-repeat: repeat-x;
+    -webkit-mask-size: 1440px 100px, 1440px 80px, 1440px 56px;
+    mask-size: 1440px 100px, 1440px 80px, 1440px 56px;
+    -webkit-mask-position: 0 100%, 300px 100%, 0 100%;
+    mask-position: 0 100%, 300px 100%, 0 100%;
     animation: sl-waves 24s linear infinite;
     pointer-events: none;
   }
@@ -462,22 +481,22 @@ $sl-wave-footer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
 }
 
 @keyframes sl-waves {
-  from { background-position: 0 100%, 300px 100%, 0 100%; }
-  to { background-position: -1440px 100%, 1740px 100%, -720px 100%; }
+  from { -webkit-mask-position: 0 100%, 300px 100%, 0 100%; mask-position: 0 100%, 300px 100%, 0 100%; }
+  to { -webkit-mask-position: -1440px 100%, 1740px 100%, -720px 100%; mask-position: -1440px 100%, 1740px 100%, -720px 100%; }
 }
 
 // The waves end in white, so sections under the hero fade in from white too.
 .sl-hero + .sl-section--teal {
   background:
     radial-gradient(ellipse at 15% 30%, rgba(255, 255, 255, 0.18), transparent 55%),
-    linear-gradient(180deg, #fff 0, $sl-teal $sl-fade, $sl-teal-deep calc(100% - #{$sl-fade}), #fff 100%);
+    linear-gradient(180deg, #{$sl-page} 0, #{$sl-teal} $sl-fade, #{$sl-teal-deep} calc(100% - #{$sl-fade}), #{$sl-page} 100%);
 }
 
 // White sections: faint dotted "sand" texture over the teal tint.
 .sl-section:not(.sl-section--teal):not(.sl-section--green):not(.sl-section--emergency) {
   background:
     radial-gradient(rgba(67, 192, 212, 0.13) 1.2px, transparent 1.6px) 0 0 / 22px 22px,
-    linear-gradient(180deg, #fff 0%, $sl-mist 100%);
+    linear-gradient(180deg, #{$sl-page} 0%, #{$sl-mist} 100%);
 }
 
 // Section headings: bigger, with a small sun-to-sea accent bar.
@@ -503,7 +522,7 @@ $sl-wave-footer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
   border: 1px solid rgba(28, 36, 75, 0.06);
   border-top: 5px solid $sl-teal;
   border-radius: 16px;
-  background: #fff;
+  background: $sl-surface;
   box-shadow: 0 10px 30px rgba(28, 36, 75, 0.08);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 
@@ -530,7 +549,7 @@ $sl-wave-footer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
     font-size: clamp(2rem, 4vw, 2.6rem);
     font-weight: 800;
     margin-bottom: 0.15em;
-    @include sl-text-color($sl-navy);
+    @include sl-text-color($sl-heading);
   }
 }
 

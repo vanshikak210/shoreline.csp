@@ -4,6 +4,16 @@
   _data/shoreline_pages.yml order below so adding a page is one line here.
 {%- endcomment -%}
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap">
+<script>
+// Set the chosen theme's colors before the page paints (cached by preferences-store.js);
+// the module below re-applies everything once it loads.
+try {
+    const themeVariables = JSON.parse(localStorage.getItem('shoreline.themeVariables') || 'null') || {};
+    Object.entries(themeVariables).forEach(([name, value]) => {
+        if (typeof value === 'string') document.documentElement.style.setProperty(name, value);
+    });
+} catch (err) { /* no saved theme or storage blocked: Shoreline's own colors apply */ }
+</script>
 <header class="sl-header">
     <div class="sl-container">
         <a class="sl-logo" href="{{ '/shoreline/' | relative_url }}">
@@ -28,7 +38,7 @@
 <script type="module">
 import { renderShorelineAuth } from '{{ site.baseurl }}/assets/js/shoreline/auth.js';
 import { applySavedPreferences } from '{{ site.baseurl }}/assets/js/shoreline/preferences-store.js';
-// Language, text size, contrast and motion chosen on /shoreline/preferences.
+// Language, theme, font, text size, contrast, motion and read-aloud from /shoreline/preferences.
 applySavedPreferences();
 renderShorelineAuth(document.getElementById('shorelineAuthArea'));
 </script>

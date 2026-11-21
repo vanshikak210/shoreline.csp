@@ -225,7 +225,7 @@ profile:
 # holds the option lists, so the saved values and the form can't drift apart).
 preferences:
   title: "Preferences"
-  lead: "Pick your language and how the site looks. Saved on this device."
+  lead: "Pick your language, theme, text size and read-aloud voice. Saved on this device."
 
 # /shoreline/analytics — admin accounts only (Flask role "Admin").
 analytics:
