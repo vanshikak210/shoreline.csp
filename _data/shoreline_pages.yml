@@ -1,7 +1,8 @@
 # Content for the Shoreline section pages (Our Impact, Get Help, Volunteer, Donate).
 # Rendered by _includes/shoreline/page.html; each page file under shoreline/ picks one key.
-# Edit text here, not in HTML. Program names, address and phone come from shorelinecs.org;
-# impact numbers are SAMPLE placeholders until Shoreline shares real data.
+# Edit text here, not in HTML. Figures and program details come from Shoreline Community
+# Services' 2025 Annual Impact Report (impact_report below); phone numbers and Compass
+# Station hours come from shorelinecs.org/contact. Update both together each year.
 #
 # Section types:
 #   cards  - grid of cards: title, text, optional button {label, url, style}
@@ -11,42 +12,112 @@
 
 contact:
   address: "1004 Chalcedony St, San Diego, CA 92109"
+  # General questions, partnerships, media and donations.
   phone: "(858) 900-7024"
+  phone_tel: "+18589007024"
+  # For people experiencing homelessness, or helping someone who is.
+  help_phone: "(858) 247-7088"
+  help_phone_tel: "+18582477088"
   email: "info@shorelinecs.org"
   official_site: "https://shorelinecs.org"
 
+impact_report:
+  year: 2025
+  url: "https://shorelinecs.org/wp-content/uploads/2026/02/2025-Annual-Impact-Report.pdf"
+
 impact:
   title: "Our Impact"
-  lead: "Neighbors helping neighbors across Pacific Beach, Mission Beach and La Jolla."
-  note: "Sample numbers for the redesign. Real figures will come from Shoreline's outreach data."
+  lead: "2025 marked Shoreline's 10th year of community-led work in San Diego's Central Beach Area."
+  note: 'All figures are from Shoreline Community Services&rsquo; <a href="https://shorelinecs.org/wp-content/uploads/2026/02/2025-Annual-Impact-Report.pdf">2025 Annual Impact Report</a>.'
   sections:
-    - heading: "This Year at a Glance"
+    - heading: "2025 at a Glance"
       type: stats
       tone: teal
       items:
-        - { value: "1,200+", label: "Outreach contacts" }
-        - { value: "350", label: "People connected to services" }
-        - { value: "85", label: "Respite hotel nights" }
-        - { value: "4,000", label: "Volunteer hours" }
+        - { value: "23,154", label: "Encounters at The Compass Station" }
+        - { value: "1,022", label: "Street outreach engagements" }
+        - { value: "130", label: "Volunteers" }
+        - { value: "6,194", label: "Volunteer hours" }
+    - heading: "The Compass Station"
+      type: stats
+      items:
+        - { value: "13,430", label: "Guest visits" }
+        - { value: "519", label: "New intakes" }
+        - { value: "1,378", label: "Showers and haircuts" }
+        - { value: "1,613", label: "Loads of laundry" }
+        - { value: "338", label: "Documents recovered" }
+        - { value: "349", label: "New mail sign-ups" }
+        - { value: "455", label: "Bus passes provided" }
+        - { value: "126", label: "Benefits connections" }
+    - heading: "Health and Housing"
+      type: stats
+      tone: green
+      items:
+        - { value: "573", label: "Nurse appointments" }
+        - { value: "744", label: "Acupuncture and naturopath appointments" }
+        - { value: "85", label: "Dental appointments" }
+        - { value: "223", label: "Healthcare connections, including mental health and substance use" }
+        - { value: "282", label: "Housing connections" }
+    - heading: "Outreach and the Community Care Crew"
+      type: stats
+      items:
+        - { value: "1,022", label: "Street engagements by the Volunteer Community Outreach Team" }
+        - { value: "223", label: "Outreach hours" }
+        - { value: "4,969", label: "Care Crew hours worked" }
+        - { value: "2,796", label: "Care Crew support hours" }
+        - { value: "13", label: "Care Crew contracts secured" }
+        - { value: "$180,428", label: "Care Crew revenue" }
     - heading: "Programs Making It Happen"
       type: cards
       items:
         - title: "The Compass Station"
-          text: "A drop-in resource center where unhoused neighbors can get services and take the first step off the street."
-        - title: "Volunteer Community Outreach"
-          text: "Trained volunteers meet people where they are, build trust, and connect them to resources."
+          text: "Shoreline's drop-in resource center and the heart of daily operations. Guests meet housing navigators, benefits specialists, healthcare providers and volunteer Guides; get mail, ID and document help; and use laundry, showers, haircuts, computers and Wi-Fi."
+        - title: "Volunteer Community Outreach Team"
+          text: "Trained volunteers, accompanied by Family Health Centers, walk the Central Beach Area offering food, water, supplies, first aid and referrals to The Compass Station."
         - title: "Medical Respite Hotel Program"
-          text: "Medically fragile people leaving a hospital stay get a safe hotel room to recover."
+          text: "People discharged from hospitals or emergency rooms recover in a safe, dignified place with follow-up care, food, medication support and case management."
         - title: "Community Care Crew"
-          text: "Paid transitional work, case management, career counseling and temporary workforce housing."
-    - heading: "Stories from the Shoreline"
+          text: "Paid transitional employment (street cleaning, power washing, landscaping, janitorial work, graffiti removal) with case management, career counseling and a tiered advancement model."
+    - heading: "2025 Highlights"
       type: cards
       tone: green
       items:
-        - title: "From the beach to a bed"
-          text: "Sample story: after months of outreach visits near Garnet Avenue, a neighbor moved into transitional housing."
-        - title: "Back to work"
-          text: "Sample story: a Community Care Crew member used his paychecks and a case manager's help to rent his first apartment in years."
+        - title: "No Neighbor Hungry"
+          text: "When a temporary CalFresh freeze during the federal government shutdown put neighbors at risk of hunger, the community donated shelf-stable food that went out through The Compass Station."
+        - title: "Share the Warmth"
+          text: "Neighbors collected winter essentials for the annual Holiday Giveaway, where Guests choose the items they need most."
+        - title: "Community Events"
+          text: "Black Tie Bingo, Summer Hoopla, the Family Fall Festival and Cocktails & Carols brought supporters together and raised funds."
+        - title: "Coming in 2026: Compass Commons"
+          text: "An on-site micro-cabin community where Care Crew members can live while they prepare for permanent housing."
+    - heading: "2025 Finances"
+      type: stats
+      tone: teal
+      items:
+        - { value: "$753,442", label: "Total operating revenue" }
+        - { value: "$734,593", label: "Total operating expenses" }
+        - { value: "68%", label: "Of spending went to programs" }
+        - { value: "$248,616", label: "Value of volunteer hours" }
+    - heading: "Where Revenue Came From"
+      type: list
+      items:
+        - "Individual and corporate donors: 33% ($251,647)"
+        - "Foundations and grants: 24%"
+        - "Community Care Crew revenue: 24%"
+        - "In-kind donations: 11% ($80,618)"
+        - "Special events: 5%"
+        - "Other: 3%"
+    - heading: "Leadership"
+      type: list
+      tone: green
+      items:
+        - "Caryn Blanton, Executive Director"
+        - "Angie Veliz, Assistant Director"
+        - "Kaari Baluja, Operations Director"
+        - "Meaghan McCarthy, Program Director and Care Crew Case Manager"
+        - "Judy Bodtke, Program Coordinator"
+        - "Margarita Brandon-Tait and Jeff Blanton, Care Crew Coordinators"
+        - "Alden Kane, Board President (2026)"
 
 help:
   title: "Get Help"
@@ -57,46 +128,69 @@ help:
       type: cards
       items:
         - title: "Visit The Compass Station"
-          text: "Drop in to talk with our team about shelter, IDs, food, health care and next steps."
+          text: "Drop in at 1004 Chalcedony St to talk with our team about housing, IDs, benefits, health care and next steps."
           button: { label: "Get Directions", url: "https://maps.google.com/?q=1004+Chalcedony+St+San+Diego+CA+92109", style: "accent fill" }
         - title: "Call Us"
-          text: "Reach the Shoreline team at (858) 900-7024 to ask about services or outreach in your area."
-          button: { label: "Call (858) 900-7024", url: "tel:+18589007024", style: "alert-red fill" }
+          text: "If you're experiencing homelessness or helping someone who is, call Shoreline at (858) 247-7088."
+          button: { label: "Call (858) 247-7088", url: "tel:+18582477088", style: "alert-red fill" }
         - title: "Find Shelter Tonight"
           text: "2-1-1 San Diego is free and open 24/7. They can check shelter beds county-wide."
           button: { label: "Call 2-1-1", url: "tel:211", style: "accent" }
+    - heading: "Compass Station Hours"
+      type: list
+      items:
+        - "Monday: 10am to 4pm"
+        - "Tuesday: 10am to 1pm (appointments 1pm to 4pm)"
+        - "Wednesday: 10am to 4pm"
+        - "Thursday: 10am to 4pm"
+        - "Friday: 10am to 1pm"
+        - "Saturday and Sunday: closed"
     - heading: "What We Can Help With"
       type: list
       tone: teal
       items:
-        - "Connecting to shelter and housing programs"
-        - "Replacing IDs and important documents"
-        - "Medical respite after a hospital stay"
+        - "Meeting housing navigators, benefits specialists and healthcare providers"
+        - "Applying for jobs, housing, Medi-Cal, CalFresh and other benefits"
+        - "Receiving mail, storing documents and replacing lost IDs"
+        - "Laundry, hot showers, haircuts, first aid and hygiene items"
+        - "Naturopathic care, acupuncture, and mental health and substance use support"
+        - "Computers, printers, Wi-Fi and charging stations"
+        - "Help with document fees and transportation"
+        - "A safe place to recover after a hospital stay (Medical Respite Hotel Program)"
         - "Paid transitional jobs through the Community Care Crew"
-        - "Food, hygiene kits, socks and warm clothing"
 
 volunteer:
   title: "Volunteer"
-  lead: "Join the Volunteer Community Outreach team and help your neighbors find their way home."
+  lead: "Join the 130 neighbors who volunteered with Shoreline in 2025."
   note: "Shift sign-up is coming soon. For now, contact Shoreline to get started."
   sections:
+    - heading: "Volunteers in 2025"
+      type: stats
+      tone: teal
+      items:
+        - { value: "130", label: "Volunteers" }
+        - { value: "47", label: "Compass Station volunteers" }
+        - { value: "6,194", label: "Volunteer hours" }
+        - { value: "$248,616", label: "Value of volunteer hours" }
     - heading: "How It Works"
       type: steps
       items:
         - { title: "Sign up", text: "Create an account on this site and choose \"I Want to Volunteer\"." }
         - { title: "Get trained", text: "Attend a short orientation on outreach, safety and local resources." }
-        - { title: "Pick a shift", text: "Join a team walking Pacific Beach, Mission Beach or La Jolla." }
+        - { title: "Pick a role", text: "Choose where you want to help, from The Compass Station to street outreach." }
         - { title: "Make a difference", text: "Build trust, hand out supplies and connect neighbors to services." }
     - heading: "Ways to Help"
       type: cards
       tone: green
       items:
-        - title: "Street Outreach"
-          text: "Walk with a trained team to check in on unsheltered neighbors."
-        - title: "Compass Station Support"
-          text: "Welcome visitors, sort donations and help keep the center running."
-        - title: "Supply Drives"
-          text: "Collect socks, hygiene items and snacks at your school, work or church."
+        - title: "Compass Station Guide"
+          text: "Greet Guests by name and help them navigate housing, benefits and health systems with trauma-informed support."
+        - title: "Community Outreach"
+          text: "Walk the Central Beach Area with a trained team and Family Health Centers, offering food, water, supplies and first aid."
+        - title: "Volunteer Nurse"
+          text: "Provide care in the Wellness Program. Eight volunteer nurses served in 2025."
+        - title: "Events and Drives"
+          text: "Help at community events or run a donation drive for Share the Warmth and No Neighbor Hungry."
           button: { label: "Sign Up", url: "/shoreline-login", style: "accent fill" }
 
 donate:
@@ -104,22 +198,24 @@ donate:
   lead: "Every gift helps a neighbor in the Central Beach Area take a step toward home."
   note: "Donations on this redesign are not processed. To give for real, use Shoreline's official Ways to Give page."
   sections:
-    - heading: "What Your Gift Does"
+    - heading: "Where Your Gift Goes"
       type: stats
       tone: teal
       items:
-        - { value: "$25", label: "Hygiene kit and socks" }
-        - { value: "$50", label: "A meal and outreach supplies" }
-        - { value: "$100", label: "A night in a medical respite room" }
-        - { value: "$250", label: "A week of paid Care Crew work" }
+        - { value: "68%", label: "Of 2025 spending went to programs" }
+        - { value: "33%", label: "Of 2025 revenue came from individual and corporate donors" }
+        - { value: "$80,618", label: "Of in-kind donations in 2025" }
+        - { value: "13,430", label: "Guest visits your support made possible" }
     - heading: "Ways to Give"
       type: cards
       items:
         - title: "Give Money"
-          text: "One-time or monthly gifts fund outreach, respite rooms and the Care Crew."
+          text: "One-time or monthly gifts fund The Compass Station, outreach, medical respite and the Care Crew."
           button: { label: "Give on shorelinecs.org", url: "https://shorelinecs.org/donate/", style: "accent fill" }
         - title: "Donate Items"
           text: "Drop off new socks, underwear, hygiene items and snacks at The Compass Station."
+        - title: "Share the Warmth"
+          text: "Collect new or gently used winter essentials for the annual Holiday Giveaway."
         - title: "Socktober"
           text: "Socks are the most-requested item on the street. Run a sock drive this October!"
     - heading: "Most-Needed Items"

@@ -1,7 +1,7 @@
 {%- assign contact = site.data.shoreline_pages.contact -%}
 <footer class="sl-footer">
     <div class="sl-container">
-        <p>{{ contact.address }} · <a href="tel:+18589007024">{{ contact.phone }}</a> · <a href="mailto:{{ contact.email }}">{{ contact.email }}</a></p>
+        <p>{{ contact.address }} · Need help? <a href="tel:{{ contact.help_phone_tel }}">{{ contact.help_phone }}</a> · General: <a href="tel:{{ contact.phone_tel }}">{{ contact.phone }}</a> · <a href="mailto:{{ contact.email }}">{{ contact.email }}</a></p>
         <p>A student redesign project for <a href="{{ contact.official_site }}">Shoreline Community Services</a>. This is not the official Shoreline website.</p>
         <p><a href="{{ '/capstone/shoreline-volunteer/' | relative_url }}">About this project</a></p>
     </div>
