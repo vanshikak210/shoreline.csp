@@ -1,0 +1,207 @@
+{
+  "schemaVersion": 1,
+  "kind": "ocs-ui-page",
+  "page": {
+    "title": "Shoreline Connect",
+    "description": "A website for Shoreline Community Services: get help, volunteer, donate, and track your impact.",
+    "byline": "Team Shoreline",
+    "course": "csp",
+    "width": "contained",
+    "image": ""
+  },
+  "sections": [
+    {
+      "type": "stack",
+      "settings": {},
+      "cells": [
+        {
+          "blocks": [
+            {
+              "type": "hero",
+              "settings": {
+                "badge": "CSP · Non-profit partner",
+                "title": "Shoreline Connect",
+                "lead": "Shoreline Community Services helps unsheltered neighbors in San Diego's Central Beach Area find housing, health care, work and support. We built them a site where people can get help, sign up to volunteer, and log the hours they give.",
+                "links": [
+                  { "label": "Visit the site", "url": "https://shoreline.opencodingsociety.com/" },
+                  { "label": "I need help", "url": "https://shoreline.opencodingsociety.com/shoreline/get-help" },
+                  { "label": "Source code", "url": "https://github.com/vanshikak210/shoreline.csp" }
+                ]
+              }
+            },
+            {
+              "type": "heading",
+              "settings": { "text": "The problem", "level": "2", "subtitle": "What our partner told us" }
+            },
+            {
+              "type": "text",
+              "settings": {
+                "body": "Shoreline runs on volunteers, but signing up, finding the right role and keeping track of hours happened on paper and by phone. People who needed help had to dig for the help line and the Compass Station's hours. <b>We wanted one place where a neighbor can find help in two clicks and a volunteer can sign up, choose how to help and see their impact.</b>"
+              }
+            },
+            {
+              "type": "card",
+              "settings": {
+                "title": "Our partner: Shoreline Community Services",
+                "body": "For ten years Shoreline has run The Compass Station, a drop-in resource center at 1004 Chalcedony St, plus street outreach, a medical respite hotel program and the Community Care Crew, a paid transitional jobs program.",
+                "links": [ { "label": "shorelinecs.org", "url": "https://shorelinecs.org" } ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "columns",
+      "settings": { "layout": "halves", "style": "plain" },
+      "cells": [
+        {
+          "blocks": [
+            { "type": "heading", "settings": { "text": "What our site does", "level": "2", "subtitle": "" } },
+            {
+              "type": "keypoints",
+              "settings": {
+                "items": [
+                  { "title": "Get help fast", "text": "The help line, directions and Compass Station hours, one click from every page." },
+                  { "title": "Accounts that remember you", "text": "Sign up once and stay signed in on your computer and your phone." },
+                  { "title": "Choose how to help", "text": "A short survey after sign-up: volunteer, donate or just browse." },
+                  { "title": "Track your impact", "text": "A profile where volunteers log their hours and see their totals." }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "blocks": [
+            { "type": "heading", "settings": { "text": "Shoreline in 2025", "level": "2", "subtitle": "From their Annual Impact Report" } },
+            {
+              "type": "stats",
+              "settings": {
+                "items": [
+                  { "value": "10 years", "label": "Serving the Central Beach Area" },
+                  { "value": "130", "label": "Volunteers" },
+                  { "value": "6,194", "label": "Volunteer hours" },
+                  { "value": "68%", "label": "Of spending went to programs" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "stack",
+      "settings": { "style": "tint" },
+      "cells": [
+        {
+          "blocks": [
+            { "type": "heading", "settings": { "text": "Live from our site", "level": "2", "subtitle": "Totals from our Flask backend, updated every time this page loads" } },
+            {
+              "type": "api_data",
+              "settings": {
+                "title": "Shoreline Connect right now",
+                "view": "stats",
+                "limit": 6,
+                "source": {
+                  "url": "https://shoreline-api.opencodingsociety.com/api/shoreline/stats",
+                  "list_path": "stats",
+                  "title_path": "",
+                  "text_path": "",
+                  "image_path": "",
+                  "link_path": "",
+                  "value_path": "value",
+                  "label_path": "label",
+                  "snapshot": { "items": [], "fetched_at": 0, "from_loopback": false }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "stack",
+      "settings": {},
+      "cells": [
+        {
+          "blocks": [
+            { "type": "heading", "settings": { "text": "Explore the site", "level": "2", "subtitle": "" } },
+            {
+              "type": "link_cards",
+              "settings": {
+                "label": "Shoreline Connect pages",
+                "items": [
+                  { "kicker": "For neighbors", "title": "Get Help", "text": "Call the help line, get directions and see the Compass Station's hours.", "url": "https://shoreline.opencodingsociety.com/shoreline/get-help" },
+                  { "kicker": "For volunteers", "title": "Volunteer", "text": "How it works and the ways to help, from street outreach to the Compass Station.", "url": "https://shoreline.opencodingsociety.com/shoreline/volunteer" },
+                  { "kicker": "For donors", "title": "Donate", "text": "What a gift does and how to give.", "url": "https://shoreline.opencodingsociety.com/shoreline/donate" },
+                  { "kicker": "For everyone", "title": "Our Impact", "text": "Shoreline's programs and the people behind them.", "url": "https://shoreline.opencodingsociety.com/shoreline/impact" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "columns",
+      "settings": { "layout": "sidebar_right", "style": "plain" },
+      "cells": [
+        {
+          "blocks": [
+            { "type": "heading", "settings": { "text": "How we built it", "level": "2", "subtitle": "" } },
+            {
+              "type": "keypoints",
+              "settings": {
+                "items": [
+                  { "title": "Frontend", "text": "Jekyll on GitHub Pages with the OCS component styles, at shoreline.opencodingsociety.com." },
+                  { "title": "Backend", "text": "Flask, SQLAlchemy and SQLite in Docker on the OCS server, at shoreline-api.opencodingsociety.com." },
+                  { "title": "Login", "text": "A secure JWT cookie, so you stay signed in on any device." },
+                  { "title": "Data", "text": "Profiles, survey answers and volunteer hours saved per account, with an admin view for Shoreline staff." }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "blocks": [
+            {
+              "type": "card",
+              "settings": {
+                "title": "Try it yourself",
+                "body": "Create an account, pick how you want to help, then open your profile and log an hour.",
+                "links": [ { "label": "Create an account", "url": "https://shoreline.opencodingsociety.com/shoreline-login" } ]
+              }
+            },
+            {
+              "type": "team",
+              "settings": {
+                "title": "Our team",
+                "items": [
+                  { "name": "Vanshika", "role": "Developer", "url": "https://github.com/vanshikak210" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "stack",
+      "settings": {},
+      "cells": [
+        {
+          "blocks": [
+            {
+              "type": "kanban",
+              "settings": { "url": "https://github.com/vanshikak210/shoreline.csp/issues", "filter": "", "title": "Our project board" }
+            },
+            {
+              "type": "feedback",
+              "settings": { "title": "Feedback", "prompt": "Would this site help you volunteer with or get help from Shoreline?" }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

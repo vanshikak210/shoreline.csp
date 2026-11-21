@@ -5,7 +5,10 @@
 # Station hours come from shorelinecs.org/contact. Update both together each year.
 #
 # Section types:
-#   cards  - grid of cards: title, text, optional button {label, url, style}
+#   cards  - grid of cards: title, text, optional button {label, url, style},
+#            optional highlight {value, label} (one number per card at most)
+#   feature - one short story: text, optional highlight {value, label} and button
+#   (any section) intro - a line under the heading; (list) collapsed - hide it behind a button
 #   stats  - big-number tiles: value, label
 #   list   - simple bullet list: items
 #   steps  - numbered steps: title, text
@@ -29,6 +32,8 @@ impact:
   title: "Our Impact"
   lead: "2025 marked Shoreline's 10th year of community-led work in San Diego's Central Beach Area."
   note: 'All figures are from Shoreline Community Services&rsquo; <a href="https://shorelinecs.org/wp-content/uploads/2026/02/2025-Annual-Impact-Report.pdf">2025 Annual Impact Report</a>.'
+  # Kept light on purpose: one row of headline numbers, then stories. Each card can carry one
+  # highlight number; the rest of the report's figures stay in the linked PDF.
   sections:
     - heading: "2025 at a Glance"
       type: stats
@@ -38,49 +43,39 @@ impact:
         - { value: "1,022", label: "Street outreach engagements" }
         - { value: "130", label: "Volunteers" }
         - { value: "6,194", label: "Volunteer hours" }
-    - heading: "The Compass Station"
-      type: stats
-      items:
-        - { value: "13,430", label: "Guest visits" }
-        - { value: "519", label: "New intakes" }
-        - { value: "1,378", label: "Showers and haircuts" }
-        - { value: "1,613", label: "Loads of laundry" }
-        - { value: "338", label: "Documents recovered" }
-        - { value: "349", label: "New mail sign-ups" }
-        - { value: "455", label: "Bus passes provided" }
-        - { value: "126", label: "Benefits connections" }
-    - heading: "Health and Housing"
-      type: stats
-      tone: green
-      items:
-        - { value: "573", label: "Nurse appointments" }
-        - { value: "744", label: "Acupuncture and naturopath appointments" }
-        - { value: "85", label: "Dental appointments" }
-        - { value: "223", label: "Healthcare connections, including mental health and substance use" }
-        - { value: "282", label: "Housing connections" }
-    - heading: "Outreach and the Community Care Crew"
-      type: stats
-      items:
-        - { value: "1,022", label: "Street engagements by the Volunteer Community Outreach Team" }
-        - { value: "223", label: "Outreach hours" }
-        - { value: "4,969", label: "Care Crew hours worked" }
-        - { value: "2,796", label: "Care Crew support hours" }
-        - { value: "13", label: "Care Crew contracts secured" }
-        - { value: "$180,428", label: "Care Crew revenue" }
     - heading: "Programs Making It Happen"
       type: cards
       items:
         - title: "The Compass Station"
-          text: "Shoreline's drop-in resource center and the heart of daily operations. Guests meet housing navigators, benefits specialists, healthcare providers and volunteer Guides; get mail, ID and document help; and use laundry, showers, haircuts, computers and Wi-Fi."
+          text: "Shoreline's drop-in resource center and the heart of daily operations. Guests meet housing navigators, benefits specialists, healthcare providers and volunteer Guides, all in one place."
+          highlight: { value: "13,430", label: "guest visits" }
         - title: "Volunteer Community Outreach Team"
-          text: "Trained volunteers, accompanied by Family Health Centers, walk the Central Beach Area offering food, water, supplies, first aid and referrals to The Compass Station."
+          text: "Trained volunteers, accompanied by Family Health Centers, walk the Central Beach Area offering food, water, supplies, first aid and a friendly face."
+          highlight: { value: "1,022", label: "street engagements" }
         - title: "Medical Respite Hotel Program"
-          text: "People discharged from hospitals or emergency rooms recover in a safe, dignified place with follow-up care, food, medication support and case management."
+          text: "People leaving a hospital or emergency room recover in a safe, dignified place with follow-up care, food, medication support and case management."
         - title: "Community Care Crew"
-          text: "Paid transitional employment (street cleaning, power washing, landscaping, janitorial work, graffiti removal) with case management, career counseling and a tiered advancement model."
-    - heading: "2025 Highlights"
+          text: "Paid transitional jobs (street cleaning, landscaping, power washing, graffiti removal) with case management and career counseling, so members can work their way home."
+          highlight: { value: "4,969", label: "hours worked by the Crew" }
+    - heading: "A Visit to The Compass Station"
       type: cards
       tone: green
+      intro: "What a guest can get done in one morning."
+      items:
+        - title: "Get clean and cared for"
+          text: "Hot showers, haircuts and laundry, plus a nurse, acupuncture, naturopathic and dental care."
+          highlight: { value: "1,378", label: "showers and haircuts" }
+        - title: "Get your documents back"
+          text: "A mailing address, safe storage for papers and help replacing lost IDs, the first step toward a job or a lease."
+          highlight: { value: "338", label: "documents recovered" }
+        - title: "Get connected"
+          text: "Housing navigators, Medi-Cal and CalFresh applications, and mental health and substance use support."
+          highlight: { value: "282", label: "housing connections" }
+        - title: "Get where you need to go"
+          text: "Bus passes, computers, Wi-Fi and phone charging for appointments, interviews and staying in touch."
+          highlight: { value: "455", label: "bus passes" }
+    - heading: "2025 Highlights"
+      type: cards
       items:
         - title: "No Neighbor Hungry"
           text: "When a temporary CalFresh freeze during the federal government shutdown put neighbors at risk of hunger, the community donated shelf-stable food that went out through The Compass Station."
@@ -90,26 +85,15 @@ impact:
           text: "Black Tie Bingo, Summer Hoopla, the Family Fall Festival and Cocktails & Carols brought supporters together and raised funds."
         - title: "Coming in 2026: Compass Commons"
           text: "An on-site micro-cabin community where Care Crew members can live while they prepare for permanent housing."
-    - heading: "2025 Finances"
-      type: stats
+    - heading: "Where the Money Goes"
+      type: feature
       tone: teal
-      items:
-        - { value: "$753,442", label: "Total operating revenue" }
-        - { value: "$734,593", label: "Total operating expenses" }
-        - { value: "68%", label: "Of spending went to programs" }
-        - { value: "$248,616", label: "Value of volunteer hours" }
-    - heading: "Where Revenue Came From"
+      highlight: { value: "68¢", label: "of every dollar went straight to programs" }
+      text: "In 2025, a third of Shoreline's support came from individual and corporate donors, and volunteers gave time worth nearly a quarter of a million dollars."
+      button: { label: "Read the full 2025 report", url: "https://shorelinecs.org/wp-content/uploads/2026/02/2025-Annual-Impact-Report.pdf", style: "accent fill" }
+    - heading: "The People Behind Shoreline"
       type: list
-      items:
-        - "Individual and corporate donors: 33% ($251,647)"
-        - "Foundations and grants: 24%"
-        - "Community Care Crew revenue: 24%"
-        - "In-kind donations: 11% ($80,618)"
-        - "Special events: 5%"
-        - "Other: 3%"
-    - heading: "Leadership"
-      type: list
-      tone: green
+      collapsed: "Meet the leadership team"
       items:
         - "Caryn Blanton, Executive Director"
         - "Angie Veliz, Assistant Director"
@@ -164,14 +148,11 @@ volunteer:
   lead: "Join the 130 neighbors who volunteered with Shoreline in 2025."
   note: "Shift sign-up is coming soon. For now, contact Shoreline to get started."
   sections:
-    - heading: "Volunteers in 2025"
-      type: stats
+    - heading: "Why It Matters"
+      type: feature
       tone: teal
-      items:
-        - { value: "130", label: "Volunteers" }
-        - { value: "47", label: "Compass Station volunteers" }
-        - { value: "6,194", label: "Volunteer hours" }
-        - { value: "$248,616", label: "Value of volunteer hours" }
+      highlight: { value: "6,194", label: "hours given by volunteers in 2025" }
+      text: "Volunteers are Shoreline's Guides at The Compass Station, its outreach walkers and its nurses. Every shift means a neighbor is greeted by name and gets one step closer to home."
     - heading: "How It Works"
       type: steps
       items:
@@ -199,13 +180,10 @@ donate:
   note: "Donations on this redesign are not processed. To give for real, use Shoreline's official Ways to Give page."
   sections:
     - heading: "Where Your Gift Goes"
-      type: stats
+      type: feature
       tone: teal
-      items:
-        - { value: "68%", label: "Of 2025 spending went to programs" }
-        - { value: "33%", label: "Of 2025 revenue came from individual and corporate donors" }
-        - { value: "$80,618", label: "Of in-kind donations in 2025" }
-        - { value: "13,430", label: "Guest visits your support made possible" }
+      highlight: { value: "68¢", label: "of every dollar goes straight to programs" }
+      text: "Your gift keeps The Compass Station's doors open: showers, mail, IDs, a nurse, and a team that helps neighbors find housing and work."
     - heading: "Ways to Give"
       type: cards
       items:

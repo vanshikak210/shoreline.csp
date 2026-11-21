@@ -1,7 +1,7 @@
 {%- comment -%}
   Renders one Shoreline section page from _data/shoreline_pages.yml.
   Usage: {% include shoreline/page.html key="impact" %}
-  Section types: cards, stats, list, steps (see the data file header).
+  Section types: cards, stats, list, steps, feature (see the data file header).
 {%- endcomment -%}
 {%- assign page_data = site.data.shoreline_pages[include.key] -%}
 <!-- markdownlint-disable MD033 -->
@@ -20,6 +20,9 @@
 <section class="sl-section{% if section.tone %} sl-section--{{ section.tone }}{% endif %}">
     <div class="sl-container">
         <h2>{{ section.heading }}</h2>
+        {%- if section.intro %}
+        <p class="sl-section__intro">{{ section.intro }}</p>
+        {%- endif %}
 
         {%- if section.type == "stats" %}
         <div class="ocs__grid ocs__grid--standard cols-4">
@@ -34,6 +37,9 @@
             <div class="ocs__grid-cell">
                 <h3>{{ item.title }}</h3>
                 <p>{{ item.text }}</p>
+                {%- if item.highlight %}
+                <p class="sl-highlight"><strong>{{ item.highlight.value }}</strong> {{ item.highlight.label }}</p>
+                {%- endif %}
                 {%- if item.button %}
                 {%- assign url = item.button.url -%}
                 {%- if url contains "://" or url contains "tel:" or url contains "mailto:" -%}{%- else -%}{%- assign url = url | relative_url -%}{%- endif %}
@@ -50,12 +56,32 @@
             {%- endfor %}
         </ol>
 
+        {%- elsif section.type == "feature" %}
+        <div class="sl-feature">
+            {%- if section.highlight %}
+            <p class="sl-feature__big"><strong>{{ section.highlight.value }}</strong>{{ section.highlight.label }}</p>
+            {%- endif %}
+            <p class="sl-feature__text">{{ section.text }}</p>
+            {%- if section.button %}
+            {%- assign url = section.button.url -%}
+            {%- if url contains "://" or url contains "tel:" or url contains "mailto:" -%}{%- else -%}{%- assign url = url | relative_url -%}{%- endif %}
+            <a class="ocs__btn medium {{ section.button.style | default: 'accent fill' }}" href="{{ url }}">{{ section.button.label }}</a>
+            {%- endif %}
+        </div>
+
         {%- elsif section.type == "list" %}
+        {%- if section.collapsed %}
+        <details class="sl-details">
+            <summary class="ocs__btn medium accent">{{ section.collapsed }}</summary>
+        {%- endif %}
         <ul class="sl-list">
             {%- for item in section.items %}
             <li>{{ item }}</li>
             {%- endfor %}
         </ul>
+        {%- if section.collapsed %}
+        </details>
+        {%- endif %}
         {%- endif %}
     </div>
 </section>
