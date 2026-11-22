@@ -6,3 +6,8 @@
         <p><a href="{{ '/capstone/shoreline-volunteer/' | relative_url }}">About this project</a></p>
     </div>
 </footer>
+<script type="module">
+// Floating language button, bottom right of every Shoreline page.
+import { mountLanguageButton } from '{{ site.baseurl }}/assets/js/shoreline/language-fab.js';
+mountLanguageButton('{{ "/shoreline/preferences" | relative_url }}');
+</script>

@@ -273,3 +273,75 @@ html[data-sl-motion="reduce"] .shoreline-site {
   z-index: 30;
   box-shadow: 0 6px 18px rgba(28, 36, 75, 0.25);
 }
+
+// Floating language button (assets/js/shoreline/language-fab.js), bottom right on every
+// Shoreline page; the read-aloud button sits bottom left.
+.sl-lang-fab {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+
+  &__btn {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 0;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    color: #fff;
+    background: #43c0d4;
+    box-shadow: 0 6px 18px rgba(28, 36, 75, 0.25);
+    transition: transform 0.15s ease;
+
+    &:hover { transform: scale(1.06); }
+    &:focus-visible { outline: 3px solid #fcb900; outline-offset: 2px; }
+  }
+
+  &__panel {
+    width: min(280px, calc(100vw - 32px));
+    padding: 16px;
+    border-radius: 14px;
+    background: #fff;
+    color: #262b36;
+    --pref-text-color: #262b36;
+    box-shadow: 0 10px 30px rgba(28, 36, 75, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+
+    &[hidden] { display: none; }
+    .ocs__label { color: #1c244b; --pref-text-color: #1c244b; }
+    select { width: 100%; }
+  }
+
+  &__more { font-size: 0.85rem; color: #2ea6bd; --pref-accent-color: #2ea6bd; }
+}
+
+// The OCS theme styles every button, select and label (dark fields, monospace); win with a
+// doubled class so the floating panel always reads as a light card in any theme.
+.sl-lang-fab.sl-lang-fab {
+  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+
+  .sl-lang-fab__btn { background: #43c0d4; color: #fff; }
+  .sl-lang-fab__btn:hover { background: #2ea6bd; }
+  .sl-lang-fab__panel, .ocs__label, .sl-lang-fab__more { font-family: inherit; }
+  .ocs__label { font-weight: 600; }
+
+  select.ocs__input {
+    background: #fff;
+    color: #262b36;
+    --pref-text-color: #262b36;
+    border: 2px solid #43c0d4;
+    border-radius: 8px;
+    font-family: inherit;
+  }
+}
+
+[data-sl-motion="reduce"] .sl-lang-fab__btn { transition: none; }
