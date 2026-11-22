@@ -11,6 +11,7 @@
 // what kept bouncing the Shoreline header back there.
 
 import { baseurl, pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
+import { resetPreferences } from '{{ site.baseurl }}/assets/js/shoreline/preferences-store.js';
 import { accountTabs, isShorelineAdmin } from '{{ site.baseurl }}/assets/js/shoreline/account-model.js';
 
 const SURVEY_KEY = 'shoreline.survey';
@@ -96,6 +97,8 @@ export async function shorelineLogout() {
         console.warn('Shoreline: logout request failed', err);
     }
     localStorage.removeItem(SURVEY_KEY);
+    // Back to the default look and English, so the next person on this device starts fresh.
+    resetPreferences();
     rememberUser(null);
 }
 

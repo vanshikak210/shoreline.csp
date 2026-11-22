@@ -93,6 +93,20 @@ export function reloadInLanguage(language) {
     window.location.reload();
 }
 
+/**
+ * Forget this device's Shoreline preferences (language, theme, font, look, read aloud) and
+ * the translate cookie, so the next page loads with the defaults. Called on log out.
+ */
+export function resetPreferences() {
+    try {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(THEME_CACHE_KEY);
+    } catch (err) {
+        console.warn('Shoreline: could not clear saved preferences', err);
+    }
+    clearTranslateCookies();
+}
+
 /** Apply everything saved; runs on every Shoreline page from _includes/shoreline/header.html. */
 export function applySavedPreferences() {
     const prefs = loadPreferences();
