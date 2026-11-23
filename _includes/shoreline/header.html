@@ -3,6 +3,13 @@
   Used by index.md and the section pages in shoreline/. Nav entries come from
   _data/shoreline_pages.yml order below so adding a page is one line here.
 {%- endcomment -%}
+<script>
+// Never stay on plain http:// (browsers show "Not secure" and the login cookie needs HTTPS).
+// GitHub's Enforce HTTPS redirects too; this covers a phone that reopens an old http:// copy.
+if (location.protocol === 'http:' && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {
+    location.replace('https://' + location.host + location.pathname + location.search + location.hash);
+}
+</script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap">
 <script>
 // Set the chosen theme's colors before the page paints (cached by preferences-store.js);
