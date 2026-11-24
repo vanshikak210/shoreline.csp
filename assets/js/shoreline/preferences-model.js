@@ -41,7 +41,9 @@ export const LANGUAGES = Object.freeze([
 export const SPEECH_RATE = Object.freeze({ min: 0.5, max: 2, step: 0.1 });
 export const SPEECH_PITCH = Object.freeze({ min: 0.5, max: 1.5, step: 0.1 });
 
-export const DEFAULT_READ_ALOUD = Object.freeze({ enabled: false, voice: '', rate: 1, pitch: 1 });
+// `enabled` is the floating Read aloud button (opt-in); `listenButtons` are the speaker
+// buttons beside headings, on by default so people who need them never have to find a setting.
+export const DEFAULT_READ_ALOUD = Object.freeze({ enabled: false, listenButtons: true, voice: '', rate: 1, pitch: 1 });
 
 export const DEFAULT_PREFERENCES = Object.freeze({
     language: '',
@@ -85,6 +87,7 @@ export function normalizeReadAloud(raw) {
     const input = raw && typeof raw === 'object' ? raw : {};
     return {
         enabled: input.enabled === true,
+        listenButtons: input.listenButtons !== false,
         voice: typeof input.voice === 'string' ? input.voice.slice(0, 200) : '',
         rate: clampNumber(input.rate, SPEECH_RATE, DEFAULT_READ_ALOUD.rate),
         pitch: clampNumber(input.pitch, SPEECH_PITCH, DEFAULT_READ_ALOUD.pitch),

@@ -96,6 +96,15 @@ custom_header: true
     <p class="sl-note" id="readAloudUnsupported" hidden>This browser can't read pages aloud.</p>
     <div class="ocs__grid--col2" id="readAloudFields">
         <div class="ocs__field">
+            <span class="ocs__label">Listen buttons</span>
+            <label class="ocs__toggle">
+                <input class="ocs__toggle-input" type="checkbox" id="prefListenButtons" name="listenButtons">
+                <span class="ocs__toggle-track"></span>
+                <span class="ocs__toggle-label">Speaker button beside every heading</span>
+            </label>
+            <small>Reads that card or section out loud.</small>
+        </div>
+        <div class="ocs__field">
             <span class="ocs__label">Read aloud button</span>
             <label class="ocs__toggle">
                 <input class="ocs__toggle-input" type="checkbox" id="prefReadAloud" name="readAloud">

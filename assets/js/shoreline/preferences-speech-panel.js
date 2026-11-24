@@ -41,6 +41,7 @@ export function createSpeechPanel({ getDraft, update }) {
 
     const change = changes => update({ readAloud: { ...getDraft().readAloud, ...changes } });
     $('prefReadAloud').addEventListener('change', event => change({ enabled: event.target.checked }));
+    $('prefListenButtons').addEventListener('change', event => change({ listenButtons: event.target.checked }));
     $('prefVoice').addEventListener('change', event => change({ voice: event.target.value }));
     $('prefRate').addEventListener('input', event => change({ rate: Number(event.target.value) }));
     $('prefPitch').addEventListener('input', event => change({ pitch: Number(event.target.value) }));
@@ -49,6 +50,7 @@ export function createSpeechPanel({ getDraft, update }) {
     return {
         render({ readAloud }) {
             $('prefReadAloud').checked = readAloud.enabled;
+            $('prefListenButtons').checked = readAloud.listenButtons;
             if ($('prefVoice').value !== readAloud.voice) $('prefVoice').value = readAloud.voice;
             $('prefRate').value = String(readAloud.rate);
             $('prefPitch').value = String(readAloud.pitch);

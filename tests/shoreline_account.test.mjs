@@ -49,7 +49,7 @@ test('valid preferences are kept', () => {
         language: 'es', textSize: 'xlarge', highContrast: true, reduceMotion: true,
         theme: 'custom', customColors: { page: '#101820', text: '#f0f0f0', accent: '#fcb900' }, font: 'atkinson',
         savedThemes: [{ name: 'Night', colors: { page: '#101820', text: '#f0f0f0', accent: '#fcb900' }, font: 'atkinson' }],
-        readAloud: { enabled: true, voice: 'Samantha', rate: 1.2, pitch: 0.9 },
+        readAloud: { enabled: true, listenButtons: false, voice: 'Samantha', rate: 1.2, pitch: 0.9 },
     };
     assert.deepEqual(normalizePreferences({ ...prefs, extra: 'dropped' }), prefs);
 });
@@ -166,7 +166,13 @@ test('mixing colors blends each channel', () => {
 
 test('read-aloud settings are clamped to usable speeds', () => {
     const prefs = normalizePreferences({ readAloud: { enabled: true, rate: 9, pitch: 'loud', voice: 42 } });
-    assert.deepEqual(prefs.readAloud, { enabled: true, voice: '', rate: 2, pitch: 1 });
+    assert.deepEqual(prefs.readAloud, { enabled: true, listenButtons: true, voice: '', rate: 2, pitch: 1 });
+});
+
+test('listen buttons are on unless someone turns them off', () => {
+    assert.equal(normalizePreferences(null).readAloud.listenButtons, true);
+    assert.equal(normalizePreferences({ readAloud: { listenButtons: 'no' } }).readAloud.listenButtons, true);
+    assert.equal(normalizePreferences({ readAloud: { listenButtons: false } }).readAloud.listenButtons, false);
 });
 
 test('speech is split at sentence ends into short chunks', () => {

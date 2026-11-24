@@ -345,3 +345,27 @@ html[data-sl-motion="reduce"] .shoreline-site {
 }
 
 [data-sl-motion="reduce"] .sl-lang-fab__btn { transition: none; }
+
+// Speaker button beside each heading (read-aloud.js). It takes the heading's own color
+// (white on banners and teal sections, dark elsewhere), so it always shows.
+.shoreline-site .sl-listen {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-left: 0.4em;
+  padding: 0;
+  vertical-align: middle;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  opacity: 0.75;
+  cursor: pointer;
+  font-size: 1rem;
+
+  &:hover, &:focus-visible, &[aria-pressed="true"] { opacity: 1; }
+  &[aria-pressed="true"] { background: color-mix(in srgb, currentColor 15%, transparent); }
+  svg { display: block; }
+}
