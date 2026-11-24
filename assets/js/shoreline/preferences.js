@@ -1,12 +1,14 @@
 ---
 ---
 // Shoreline preferences page (/shoreline/preferences): language, theme, font, look and read-aloud.
-// Changes preview as you pick them; Save keeps them on this device for every Shoreline page.
+// Changes preview as you pick them; Save keeps them on the account (and this device), so they
+// apply on every Shoreline page on any device the person signs in on.
 // The page keeps one draft of the preferences; the theme and speech panels report changes to it.
 
 import { getShorelineUser } from '{{ site.baseurl }}/assets/js/shoreline/auth.js';
 import { LANGUAGES, TEXT_SIZES, DEFAULT_PREFERENCES, normalizePreferences } from '{{ site.baseurl }}/assets/js/shoreline/preferences-model.js';
-import { loadPreferences, savePreferences, applyLook, reloadInLanguage } from '{{ site.baseurl }}/assets/js/shoreline/preferences-store.js';
+import { loadPreferences, applyLook, reloadInLanguage } from '{{ site.baseurl }}/assets/js/shoreline/preferences-store.js';
+import { savePreferencesEverywhere, syncPreferencesWithAccount } from '{{ site.baseurl }}/assets/js/shoreline/preferences-account.js';
 import { mountReadAloud, stopSpeaking } from '{{ site.baseurl }}/assets/js/shoreline/read-aloud.js';
 import { createThemePanel } from '{{ site.baseurl }}/assets/js/shoreline/preferences-theme-panel.js';
 import { createSpeechPanel } from '{{ site.baseurl }}/assets/js/shoreline/preferences-speech-panel.js';
@@ -44,6 +46,8 @@ export async function initPreferencesPage() {
 
     buildLanguageOptions($('prefLanguage'));
     buildTextSizeButtons($('prefTextSize'));
+    // Start from the account's copy, not a stale device copy (e.g. first visit on a new device).
+    await syncPreferencesWithAccount();
     let saved = loadPreferences();
     let draft = saved;
 
@@ -56,13 +60,17 @@ export async function initPreferencesPage() {
 
     // Saves preferences; a new language reloads the page, because Google Translate
     // only picks up a language when a page loads.
-    const keep = (prefs, message = 'Saved. These settings apply on every Shoreline page on this device.') => {
+    const keep = async (prefs, message = 'Saved to your account. These settings follow you to any device you sign in on.') => {
         const previousLanguage = saved.language;
+        let accountError = null;
+        let savedTo = 'account';
+        status('Saving…');
         try {
-            saved = savePreferences(prefs);
+            ({ prefs: saved, savedTo } = await savePreferencesEverywhere(prefs));
         } catch (err) {
-            status(`Couldn't save on this device: ${err.message}`);
-            return;
+            // The device copy was written before the account save failed; it uploads on a later page.
+            accountError = err;
+            saved = loadPreferences();
         }
         draft = saved;
         render();
@@ -73,7 +81,9 @@ export async function initPreferencesPage() {
             reloadInLanguage(saved.language);
             return;
         }
-        status(message);
+        status(accountError
+            ? `Saved on this device. Couldn't reach your account (${accountError.message}); it will sync next time.`
+            : savedTo === 'device' ? 'Saved on this device.' : message);
     };
 
     // Look changes preview right away; language and the read-aloud button wait for Save.

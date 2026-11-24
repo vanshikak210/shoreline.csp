@@ -120,3 +120,15 @@ export function translateCookieDomains(hostname) {
     for (let i = 0; i < parts.length - 1; i++) domains.push(parts.slice(i).join('.'));
     return domains;
 }
+
+/**
+ * What to do when a signed-in page loads, comparing this device with the account:
+ * 'upload' when the account has nothing yet (keep what was set before signing in) or this
+ * device has changes the account never received; 'download' when the account differs;
+ * 'none' when they already match. `remote` is the account's raw copy (null when none).
+ */
+export function accountSyncAction({ remote, local, unsynced }) {
+    if (remote === null || remote === undefined || unsynced) return 'upload';
+    return JSON.stringify(normalizePreferences(remote)) === JSON.stringify(normalizePreferences(local))
+        ? 'none' : 'download';
+}

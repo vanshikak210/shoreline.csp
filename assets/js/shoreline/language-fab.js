@@ -6,7 +6,8 @@
 // (The read-aloud button sits bottom left, so the two don't overlap.)
 
 import { LANGUAGES } from '{{ site.baseurl }}/assets/js/shoreline/preferences-model.js';
-import { loadPreferences, savePreferences, reloadInLanguage } from '{{ site.baseurl }}/assets/js/shoreline/preferences-store.js';
+import { loadPreferences, reloadInLanguage } from '{{ site.baseurl }}/assets/js/shoreline/preferences-store.js';
+import { savePreferencesEverywhere } from '{{ site.baseurl }}/assets/js/shoreline/preferences-account.js';
 
 const GLOBE = '<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>';
 
@@ -42,8 +43,15 @@ export function mountLanguageButton(preferencesUrl) {
     document.addEventListener('keydown', event => { if (event.key === 'Escape' && !panel.hidden) { setOpen(false); btn.focus(); } });
 
     // Google Translate only switches language on page load, so save, then reload.
-    select.addEventListener('change', () => {
-        savePreferences({ ...loadPreferences(), language: select.value });
+    // Wait for the account save first: reloading would cancel the request.
+    select.addEventListener('change', async () => {
+        select.disabled = true;
+        try {
+            await savePreferencesEverywhere({ ...loadPreferences(), language: select.value });
+        } catch (err) {
+            // Kept on this device and uploaded on a later page (see preferences-account.js).
+            console.warn('Shoreline: language saved on this device only for now', err);
+        }
         reloadInLanguage(select.value);
     });
 

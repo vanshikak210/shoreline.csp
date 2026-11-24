@@ -13,6 +13,22 @@ const STORAGE_KEY = 'shoreline.preferences';
 // The theme's CSS variables, cached so the inline script in _includes/shoreline/header.html
 // can set them before the page paints (modules run too late to avoid a flash of white).
 const THEME_CACHE_KEY = 'shoreline.themeVariables';
+// Set while this device has changes the account hasn't received yet (preferences-account.js),
+// so the next sync uploads them instead of replacing them with the account's older copy.
+const UNSYNCED_KEY = 'shoreline.preferencesUnsynced';
+
+export function markUnsynced(unsynced) {
+    try {
+        if (unsynced) localStorage.setItem(UNSYNCED_KEY, 'true');
+        else localStorage.removeItem(UNSYNCED_KEY);
+    } catch (err) {
+        console.warn('Shoreline: could not record preference sync state', err);
+    }
+}
+
+export function hasUnsyncedChanges() {
+    try { return localStorage.getItem(UNSYNCED_KEY) === 'true'; } catch (_) { return false; }
+}
 
 /** Saved preferences, or the defaults when none are saved or storage is unavailable. */
 export function loadPreferences() {
@@ -95,12 +111,14 @@ export function reloadInLanguage(language) {
 
 /**
  * Forget this device's Shoreline preferences (language, theme, font, look, read aloud) and
- * the translate cookie, so the next page loads with the defaults. Called on log out.
+ * the translate cookie, so the next page loads with the defaults. Called on log out; the
+ * account keeps its copy, which comes back on the next sign-in.
  */
 export function resetPreferences() {
     try {
         localStorage.removeItem(STORAGE_KEY);
         localStorage.removeItem(THEME_CACHE_KEY);
+        localStorage.removeItem(UNSYNCED_KEY);
     } catch (err) {
         console.warn('Shoreline: could not clear saved preferences', err);
     }

@@ -45,7 +45,10 @@ try {
 <script type="module">
 import { renderShorelineAuth } from '{{ site.baseurl }}/assets/js/shoreline/auth.js';
 import { applySavedPreferences } from '{{ site.baseurl }}/assets/js/shoreline/preferences-store.js';
+import { syncPreferencesWithAccount } from '{{ site.baseurl }}/assets/js/shoreline/preferences-account.js';
 // Language, theme, font, text size, contrast, motion and read-aloud from /shoreline/preferences.
 applySavedPreferences();
 renderShorelineAuth(document.getElementById('shorelineAuthArea'));
+// Signed in: pick up preferences saved on the account (e.g. set on another device).
+syncPreferencesWithAccount();
 </script>

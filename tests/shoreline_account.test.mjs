@@ -190,3 +190,13 @@ test('a saved voice is used only when this device has it', () => {
     assert.equal(pickVoice(voices, 'Missing'), null);
     assert.equal(pickVoice(voices, ''), null);
 });
+
+test('signing in keeps device choices when the account has none, else follows the account', async () => {
+    const { accountSyncAction } = await import('../assets/js/shoreline/preferences-model.js');
+    const local = normalizePreferences({ theme: 'sand' });
+    assert.equal(accountSyncAction({ remote: null, local, unsynced: false }), 'upload');
+    assert.equal(accountSyncAction({ remote: { theme: 'midnight' }, local, unsynced: false }), 'download');
+    assert.equal(accountSyncAction({ remote: { theme: 'sand' }, local, unsynced: false }), 'none');
+    // A save that never reached the account wins over the account's older copy.
+    assert.equal(accountSyncAction({ remote: { theme: 'midnight' }, local, unsynced: true }), 'upload');
+});
